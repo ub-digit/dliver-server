@@ -1,0 +1,45 @@
+development:
+  adapter: postgresql
+  host: localhost
+  encoding: unicode
+  database: dliver_dev
+  pool: 5
+  timeout: 5000
+  username: postgres
+  password:
+
+test:
+  adapter: postgresql
+  host: localhost
+  encoding: unicode
+  database: dliver_test
+  pool: 5
+  timeout: 5000
+  username: postgres
+  password:
+
+staging:
+  adapter: sqlite3
+  database: db/staging.sqlite3
+  pool: 5
+  timeout: 5000  
+
+lab:
+  adapter: postgresql
+  host: host.test.com
+  encoding: unicode
+  database: dliver_test
+  pool: 5
+  timeout: 5000
+  username: postgres
+  password:
+
+production:
+  adapter: postgresql
+  host: host.test.com
+  encoding: unicode
+  database: dliver_production
+  pool: 5
+  timeout: 5000
+  username: postgres
+  password:
