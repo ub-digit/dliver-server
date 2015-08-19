@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'rails_helper'
 
 RSpec.describe MetsInterface, type: :model do
@@ -92,6 +93,38 @@ RSpec.describe MetsInterface, type: :model do
 
         expect(file_groups).to be_an Array
         expect(file_groups.count).to eq 4
+      end
+    end
+  end
+
+  describe "wrapped object" do
+    context "for libris xml mods interface" do
+      it "should return catalog id" do
+        expect(@libris_mets_interface.catalog_id).to eq("663299")
+      end
+
+      it "should return source" do
+        expect(@libris_mets_interface.source).to eq("libris")
+      end
+
+      it "should return title" do
+        expect(@libris_mets_interface.title).to eq("Podsol och brunjord")
+      end
+
+      it "should return sub_title" do
+        expect(@libris_mets_interface.sub_title).to match(/en studie av vegetation/)
+      end
+
+      it "should return author" do
+        expect(@libris_mets_interface.author).to match(/Nils/)
+      end
+
+      it "should return search string" do
+        expect(@libris_mets_interface.search_string).to match(/Podsol.*vegetation.*Nils/)
+      end
+
+      it "should return year" do
+        expect(@libris_mets_interface.year).to eq("1960")
       end
     end
   end

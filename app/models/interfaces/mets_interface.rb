@@ -88,4 +88,40 @@ class MetsInterface
     @file_groups
   end
 
+  def wrapped_object
+    mdwrap = @doc.xpath('//mets:dmdSec/mets:mdWrap')
+    return nil if !mdwrap
+    if mdwrap.attr('MDTYPE').value == "MODS"
+      return LibrisModsInterface.new(mdwrap.xpath('.//mets:xmlData/*').to_xml)
+    end
+  end
+
+  # Data from specialised interface
+  def catalog_id
+    wrapped_object.id
+  end
+
+  def source
+    wrapped_object.source
+  end
+
+  def title
+    wrapped_object.title
+  end
+
+  def sub_title
+    wrapped_object.sub_title
+  end
+
+  def author
+    wrapped_object.author
+  end
+
+  def search_string
+    wrapped_object.search_string + id
+  end
+
+  def year
+    wrapped_object.year
+  end
 end
