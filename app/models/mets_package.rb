@@ -87,4 +87,49 @@ class MetsPackage < ActiveRecord::Base
     })
   end
 
+  # Sync (import new, delete removed, update existing) from filesystem
+  def self.sync
+    packages_to_delete.each do |package_name| 
+      MetsPackage.find_by_name(package_name).destroy
+    end
+
+    packages_to_add.each do |package_name| 
+      filename = file_from_package_name(package_name)
+      MetsPackage.create(xml: File.read(filename))
+    end
+  end
+
+  # Return array of all files matching .xml in the path structure
+  def self.files_in_store
+    path = APP_CONFIG["store_path"]
+    Dir.glob("#{path}/*/*.xml")
+  end
+  
+  # Create filesystem filename from package name
+  def self.file_from_package_name(name)
+    path = APP_CONFIG["store_path"]
+    "#{path}/#{name}/#{name}_mets.xml"
+  end
+
+  # Grab only package names from xml filename ("GUB0100143" from "GUB0100143_mets.xml")
+  def self.packages_in_store
+    files_in_store.map do |filename|
+      File.basename(filename).split(/_/).first
+    end
+  end
+
+  # All names of packages in database
+  def self.packages_in_db
+    MetsPackage.pluck(:name)
+  end
+
+  # We will delete packages if they are in the database but not actually in the filesystem
+  def self.packages_to_delete
+    packages_in_db - packages_in_store
+  end
+
+  # We will add packages if they are in the filesystem, but not yet in the database
+  def self.packages_to_add
+    packages_in_store - packages_in_db
+  end
 end

@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe MetsPackage, type: :model do
-  before :each do
-    @mets_package = create(:mets_package)
-  end
   describe "search_string" do
     it {should validate_presence_of(:search_string)}
   end
 
   describe "create" do
+    before :each do
+      @mets_package = create(:mets_package)
+    end
     it "should have title" do
       expect(@mets_package.title).to eq("Podsol och brunjord")
     end
@@ -41,5 +41,41 @@ RSpec.describe MetsPackage, type: :model do
       expect(metadata["source"]).to eq("libris")
     end
 
+  end
+
+  describe "sync" do
+    context "no data in database" do
+      it "should read all files in configured path structure and import them" do
+        expect(MetsPackage.count).to eq(0)
+        MetsPackage.sync
+        expect(MetsPackage.count).to eq(12)
+      end
+    end
+
+    context "one item has been removed in filesystem" do
+      before :each do 
+        MetsPackage.sync
+        create(:mets_package)
+      end
+
+      it "should purge the removed package from database" do
+        expect(MetsPackage.count).to eq(13)
+        MetsPackage.sync
+        expect(MetsPackage.count).to eq(12)
+      end
+    end
+
+    context "one item in filesystem is not included in database" do
+      before :each do 
+        MetsPackage.sync
+        MetsPackage.first.destroy
+      end
+
+      it "should purge the removed package from database" do
+        expect(MetsPackage.count).to eq(11)
+        MetsPackage.sync
+        expect(MetsPackage.count).to eq(12)
+      end
+    end
   end
 end
