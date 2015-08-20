@@ -77,5 +77,22 @@ RSpec.describe MetsPackage, type: :model do
         expect(MetsPackage.count).to eq(12)
       end
     end
+
+    context "one item in filesystem is updated" do
+      before :each do 
+        MetsPackage.sync
+        MetsPackage.first.update_attribute(:xmlhash, "something_else")
+      end
+
+      it "should purge the removed package from database" do
+        changed = MetsPackage.find_by_xmlhash("something_else")
+        expect(changed).to_not be_nil
+        expect(MetsPackage.count).to eq(12)
+        MetsPackage.sync
+        expect(MetsPackage.count).to eq(12)
+        changed = MetsPackage.find_by_xmlhash("something_else")
+        expect(changed).to be_nil
+      end
+    end
   end
 end

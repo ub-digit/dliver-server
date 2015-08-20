@@ -89,32 +89,48 @@ class MetsPackage < ActiveRecord::Base
 
   # Sync (import new, delete removed, update existing) from filesystem
   def self.sync
-    packages_to_delete.each do |package_name| 
+    files = files_in_store
+    remove_packages_to_update(files)
+
+    packages_to_delete(files).each do |package_name| 
       MetsPackage.find_by_name(package_name).destroy
     end
 
-    packages_to_add.each do |package_name| 
-      filename = file_from_package_name(package_name)
-      MetsPackage.create(xml: File.read(filename))
+    packages_to_add(files).each do |package_name| 
+      xmldata = xml_from_package_name(files, package_name)
+      MetsPackage.create(xml: xmldata)
     end
   end
 
-  # Return array of all files matching .xml in the path structure
+  # Return array of files data from all mets xml files in the path structure
   def self.files_in_store
     path = APP_CONFIG["store_path"]
-    Dir.glob("#{path}/*/*.xml")
+    Dir.glob("#{path}/*/*.xml").map do |filename| 
+      xmldata = File.read(filename)
+      hashvalue = Digest::SHA256.hexdigest(xmldata)
+      mets_object = MetsInterface.new(xmldata)
+      { 
+        name: mets_object.id,
+        filename: filename,
+        xml: xmldata,
+        xmlhash: hashvalue
+      }
+    end
   end
   
   # Create filesystem filename from package name
-  def self.file_from_package_name(name)
-    path = APP_CONFIG["store_path"]
-    "#{path}/#{name}/#{name}_mets.xml"
+  def self.xml_from_package_name(files, name)
+    file_entry = files.find { |file| file[:name] == name }
+    if !file_entry
+      raise "Should not happen - File missing?"
+    end
+    file_entry[:xml]
   end
 
-  # Grab only package names from xml filename ("GUB0100143" from "GUB0100143_mets.xml")
-  def self.packages_in_store
-    files_in_store.map do |filename|
-      File.basename(filename).split(/_/).first
+  # Grab only package names from store data
+  def self.packages_in_store(files)
+    files.map do |filedata|
+      filedata[:name]
     end
   end
 
@@ -123,13 +139,28 @@ class MetsPackage < ActiveRecord::Base
     MetsPackage.pluck(:name)
   end
 
+  # We will remove all packages from database if they exist in db but their hash differs
+  # from the filesystem hash. If they still exist, they will be readded later.
+  def self.remove_packages_to_update(files)
+    file_hashes = files.map { |x| x[:xmlhash]}
+    to_remove = []
+    MetsPackage.all.each do |package|
+      if !file_hashes.include?(package.xmlhash)
+        to_remove << package
+      end
+    end
+    to_remove.each do |package| 
+      package.destroy
+    end
+  end
+  
   # We will delete packages if they are in the database but not actually in the filesystem
-  def self.packages_to_delete
-    packages_in_db - packages_in_store
+  def self.packages_to_delete(files)
+    packages_in_db - packages_in_store(files)
   end
 
   # We will add packages if they are in the filesystem, but not yet in the database
-  def self.packages_to_add
-    packages_in_store - packages_in_db
+  def self.packages_to_add(files)
+    packages_in_store(files) - packages_in_db
   end
 end
