@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe MetsInterface, type: :model do
 
   before :each do
-     mets_package = create(:mets_package)
+     mets_package = create(:libris_package)
      @libris_mets_interface = mets_package.mets_object
   end
 

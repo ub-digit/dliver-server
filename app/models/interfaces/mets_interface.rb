@@ -89,10 +89,13 @@ class MetsInterface
   end
 
   def wrapped_object
-    mdwrap = @doc.xpath('//mets:dmdSec/mets:mdWrap')
+    mdwrap = @doc.xpath("//mets:dmdSec[@ID='dmdSec1']/mets:mdWrap")
     return nil if !mdwrap
     if mdwrap.attr('MDTYPE').value == "MODS"
       return LibrisModsInterface.new(mdwrap.xpath('.//mets:xmlData/*').to_xml)
+    end
+    if mdwrap.attr('MDTYPE').value == "OTHER"
+      return GubsInterface.new(mdwrap.xpath('.//mets:xmlData/*').to_xml)
     end
   end
 

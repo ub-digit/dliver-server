@@ -7,7 +7,7 @@ RSpec.describe MetsPackage, type: :model do
 
   describe "create" do
     before :each do
-      @mets_package = create(:mets_package)
+      @mets_package = create(:libris_package)
     end
     it "should have title" do
       expect(@mets_package.title).to eq("Podsol och brunjord")
@@ -55,7 +55,7 @@ RSpec.describe MetsPackage, type: :model do
     context "one item has been removed in filesystem" do
       before :each do 
         MetsPackage.sync
-        create(:mets_package)
+        create(:libris_package)
       end
 
       it "should purge the removed package from database" do

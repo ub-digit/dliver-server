@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe LibrisModsInterface, type: :model do
 
   before :each do
-     mets_package = create(:mets_package)
+     mets_package = create(:libris_package)
      @libris_mets_interface = mets_package.mets_object
      @libris_mods_interface = @libris_mets_interface.wrapped_object
   end
