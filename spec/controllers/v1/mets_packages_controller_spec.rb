@@ -45,4 +45,23 @@ RSpec.describe V1::MetsPackagesController, type: :controller do
       end
     end
   end
+
+  describe "show" do
+    before :each do
+      @libris_package = create(:libris_package)
+    end
+
+    it "should return existing item" do
+      get :show, name: @libris_package.name
+      expect(json['mets_package']).to_not be_nil
+      expect(response.status).to eq(200)
+    end
+
+    it "should return 404 on non-existing item" do
+      get :show, name: "Does not exist"
+      expect(json['mets_package']).to be_nil
+      expect(json['error']).to_not be_nil
+      expect(response.status).to eq(404)
+    end
+  end
 end

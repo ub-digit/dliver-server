@@ -8,4 +8,16 @@ class V1::MetsPackagesController < ApplicationController
 
     render json: {mets_packages: packages}, status: 200
   end
+
+  def show
+    package = MetsPackage.find_by_name(params[:name])
+
+    if package
+      @response[:mets_package] = package
+    else
+      error_msg(ErrorCodes::OBJECT_ERROR, "Could not find user with name #{params[:name]}")
+    end
+
+    render_json
+  end
 end
