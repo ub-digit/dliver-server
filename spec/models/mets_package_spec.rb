@@ -26,9 +26,9 @@ RSpec.describe MetsPackage, type: :model do
     end
 
     it "should have search_string" do
-      expect(@mets_package.search_string).to match(/Podsol och brunjord/)
+      expect(@mets_package.search_string).to match(/podsol och brunjord/)
       expect(@mets_package.search_string).to match(/en studie/)
-      expect(@mets_package.search_string).to match(/Nils/)
+      expect(@mets_package.search_string).to match(/nils/)
     end
 
     it "should have catalog_id" do

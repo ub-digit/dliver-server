@@ -120,7 +120,7 @@ RSpec.describe MetsInterface, type: :model do
       end
 
       it "should return search string" do
-        expect(@libris_mets_interface.search_string).to match(/Podsol.*vegetation.*Nils/)
+        expect(@libris_mets_interface.search_string).to match(/podsol.*vegetation.*nils/)
       end
 
       it "should return year" do

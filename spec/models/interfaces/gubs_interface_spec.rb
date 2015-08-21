@@ -42,8 +42,8 @@ RSpec.describe GubsInterface, type: :model do
         search_string = @gubs_interface.search_string
         
         expect(search_string).to be_a String
-        expect(search_string).to match(/Målningar av Eva Arosenius/)
-        expect(search_string).to match(/Eva Arosenius/)
+        expect(search_string).to match(/malningar av eva arosenius/)
+        expect(search_string).to match(/eva arosenius/)
       end
     end
 
@@ -115,8 +115,8 @@ RSpec.describe GubsInterface, type: :model do
         search_string = @gubs_interface.search_string
         
         expect(search_string).to be_a String
-        expect(search_string).to match(/Brev från Astrid Constantine-Torstensson till Nils Bonde Adler/)
-        expect(search_string).to match(/Astrid Constantine-Torstensson/)
+        expect(search_string).to match(/brev fran astrid constantine-torstensson till nils bonde adler/)
+        expect(search_string).to match(/astrid constantine-torstensson/)
       end
     end
 

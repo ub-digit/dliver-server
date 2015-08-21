@@ -72,7 +72,7 @@ class MetsPackage < ActiveRecord::Base
   end
 
   def normalise_search_string
-    self.search_string = self.search_string.norm
+    self.search_string = self.search_string.norm if self.search_string
   end
 
   def mets_object

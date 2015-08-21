@@ -25,7 +25,7 @@ class DcInterface
   end
 
   def search_string
-    [title, sub_title, author].join(" ")
+    [title, sub_title, author].join(" ").norm
   end
 
   def year

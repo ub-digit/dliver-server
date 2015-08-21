@@ -35,7 +35,7 @@ class LibrisModsInterface
   end
 
   def search_string
-    [title, sub_title, alt_title, alt_sub_title, author].join(" ")
+    [title, sub_title, alt_title, alt_sub_title, author].join(" ").norm
   end
 
   def year

@@ -41,11 +41,11 @@ RSpec.describe LibrisModsInterface, type: :model do
       search_string = @libris_mods_interface.search_string
       
       expect(search_string).to be_a String
-      expect(search_string).to match(/Podsol och brunjord/)
-      expect(search_string).to match(/en studie av vegetation och jordmånsbildning inom östra Skånes ås- och skogsområden/)
-      expect(search_string).to match(/Podsol and brown earth/)
-      expect(search_string).to match(/a study in vegetation and soil formation in east Scania/)
-      expect(search_string).to match(/Nils Linnermark/)
+      expect(search_string).to match(/podsol och brunjord/)
+      expect(search_string).to match(/en studie av vegetation och jordmansbildning inom ostra skanes as- och skogsomraden/)
+      expect(search_string).to match(/podsol and brown earth/)
+      expect(search_string).to match(/a study in vegetation and soil formation in east scania/)
+      expect(search_string).to match(/nils linnermark/)
     end
   end
 

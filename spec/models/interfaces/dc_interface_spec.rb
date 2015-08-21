@@ -40,8 +40,8 @@ RSpec.describe DcInterface, type: :model do
       search_string = @dc_interface.search_string
       
       expect(search_string).to be_a String
-      expect(search_string).to match(/Test title/)
-      expect(search_string).to match(/Test author/)
+      expect(search_string).to match(/test title/)
+      expect(search_string).to match(/test author/)
     end
   end
 
