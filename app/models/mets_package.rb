@@ -2,6 +2,7 @@ class MetsPackage < ActiveRecord::Base
   validates_presence_of :search_string
 
   before_validation :generate_data_from_xml
+  before_validation :normalise_search_string
 
   # Retrieves data from xml
   def generate_data_from_xml
@@ -68,6 +69,10 @@ class MetsPackage < ActiveRecord::Base
     hash[:catalog_id] = mets_object.wrapped_object.id
     hash[:source] = mets_object.wrapped_object.source
     self.metadata = hash.to_json
+  end
+
+  def normalise_search_string
+    self.search_string = self.search_string.norm
   end
 
   def mets_object
