@@ -15,7 +15,7 @@ class V1::MetsPackagesController < ApplicationController
     if package
       @response[:mets_package] = package
     else
-      error_msg(ErrorCodes::OBJECT_ERROR, "Could not find user with name #{params[:name]}")
+      error_msg(ErrorCodes::OBJECT_ERROR, "Could not find package with name #{params[:name]}")
     end
 
     render_json
