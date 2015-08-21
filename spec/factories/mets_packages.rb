@@ -13,6 +13,10 @@ FactoryGirl.define do
       xml File.new("#{Rails.root}/spec/fixtures/104358_letter_mets.xml").read
     end
 
+    trait :dc_xml do
+      xml File.new("#{Rails.root}/spec/fixtures/99999_dc_mets.xml").read
+    end
+
     trait :empty_xml do
       xml nil
     end
@@ -21,5 +25,6 @@ FactoryGirl.define do
     factory :libris_package, traits: [:libris_xml]
     factory :document_package, traits: [:document_xml]
     factory :letter_package, traits: [:letter_xml]
+    factory :dc_package, traits: [:dc_xml]
   end
 end
