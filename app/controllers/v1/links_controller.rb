@@ -29,4 +29,16 @@ class V1::LinksController < V1::ApiController
       render_json(201)
     end
   end
+
+  def destroy
+    link = Link.find_by_link_hash(params[:link_hash])
+
+    if link && link.delete
+      @response[:link] = link
+    else
+      error_msg(ErrorCodes::OBJECT_ERROR, "Could not delete link with hash #{params[:link_hash]}")
+    end
+
+    render_json
+  end
 end

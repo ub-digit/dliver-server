@@ -108,4 +108,35 @@ describe V1::LinksController do
       expect(response.status).to eq(404)
     end
   end
+
+  describe "DELETE link" do
+    before :each do
+      @link = Link.generate("GUB0100143", @valid_date); @link.save
+    end
+
+    it "should require authentication" do
+      get :destroy, link_hash: @link.link_hash
+      expect(json['link']).to be_nil
+      expect(json['error']).to_not be_nil
+      expect(response.status).to eq(403)
+    end
+
+    it "should remove existing link" do
+      expect(Link.count).to eq(1)
+      get :destroy, api_key: @api_key, link_hash: @link.link_hash
+      expect(json['link']).to_not be_nil
+      expect(json['error']).to be_nil
+      expect(Link.count).to eq(0)
+      expect(response.status).to eq(200)
+    end
+
+    it "should give error on non-existing link" do
+      expect(Link.count).to eq(1)
+      get :destroy, api_key: @api_key, link_hash: "do-not-exist"
+      expect(json['link']).to be_nil
+      expect(json['error']).to_not be_nil
+      expect(response.status).to eq(404)
+      expect(Link.count).to eq(1)
+    end
+  end
 end
