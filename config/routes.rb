@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     resources :mets_packages
     # User API
     resources :users
+    # Link API
+    resources :links
 
   end
 
