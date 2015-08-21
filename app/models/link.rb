@@ -9,8 +9,9 @@ class Link < ActiveRecord::Base
   end
 
   def is_valid?
-    return true if expire_date > Time.now
-    false
+    return false if !MetsPackage.find_by_name(package_name)
+    return false if expire_date < Time.now
+    true
   end
 
   def expire_date_validity

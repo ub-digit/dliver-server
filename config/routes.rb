@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     # User API
     resources :users
     # Link API
-    resources :links
+    resources :links, param: :link_hash
 
   end
 
