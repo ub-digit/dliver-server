@@ -71,6 +71,22 @@ class MetsPackage < ActiveRecord::Base
     self.metadata = hash.to_json
   end
 
+  def metadata_hash
+    @metadata_hash ||= JSON.parse(self.metadata)
+  end
+
+  def find_file_by_file_id(file_id)
+    metadata_hash["file_groups"].each do |file_group| 
+      file_group["files"].each do |file| 
+        if file["id"] == file_id
+          file_name = File.basename(file["location"])
+          return {group: file_group["name"], name: file_name, location: file["location"]}
+        end
+      end
+    end
+    return nil
+  end
+
   def normalise_search_string
     self.search_string = self.search_string.norm if self.search_string
   end
