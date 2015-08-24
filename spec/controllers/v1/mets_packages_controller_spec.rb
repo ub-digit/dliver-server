@@ -63,5 +63,10 @@ RSpec.describe V1::MetsPackagesController, type: :controller do
       expect(json['error']).to_not be_nil
       expect(response.status).to eq(404)
     end
+
+    it "should not return mets xml" do
+      get :show, name: @libris_package.name
+      expect(json['mets_package']['xml']).to be_nil
+    end
   end
 end

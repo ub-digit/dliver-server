@@ -81,7 +81,7 @@ class MetsPackage < ActiveRecord::Base
   end
 
   def as_json(opts={})
-    return super.merge({
+    return super(except: [:xml]).merge({
       package_id: mets_object.id,
       package_create_date: mets_object.create_date,
       package_last_modification_date: mets_object.last_modification_date,
