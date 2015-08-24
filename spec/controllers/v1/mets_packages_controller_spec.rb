@@ -68,5 +68,10 @@ RSpec.describe V1::MetsPackagesController, type: :controller do
       get :show, name: @libris_package.name
       expect(json['mets_package']['xml']).to be_nil
     end
+
+    it "should not return metadata field" do
+      get :show, name: @libris_package.name
+      expect(json['mets_package']['metadata']).to be_nil
+    end
   end
 end
