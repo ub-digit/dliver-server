@@ -23,6 +23,14 @@
               <roleTerm type="code" authority="marcrelator">aut</roleTerm>
             </role>
           </name>
+          <name type="personal">
+            <namePart type="family">Name</namePart>
+            <namePart type="given">Second</namePart>
+            <namePart type="date">1999-</namePart>
+            <role>
+              <roleTerm type="code" authority="marcrelator">aut</roleTerm>
+            </role>
+          </name>
           <titleInfo>
             <title>Podsol och brunjord</title>
             <subTitle>en studie av vegetation och jordmånsbildning inom östra Skånes ås- och skogsområden</subTitle>

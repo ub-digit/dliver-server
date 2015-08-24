@@ -45,7 +45,7 @@ RSpec.describe LibrisModsInterface, type: :model do
       expect(search_string).to match(/en studie av vegetation och jordmansbildning inom ostra skanes as- och skogsomraden/)
       expect(search_string).to match(/podsol and brown earth/)
       expect(search_string).to match(/a study in vegetation and soil formation in east scania/)
-      expect(search_string).to match(/nils linnermark/)
+      expect(search_string).to match(/nils linnermark.*second name/)
     end
   end
 
@@ -54,7 +54,7 @@ RSpec.describe LibrisModsInterface, type: :model do
       author = @libris_mods_interface.author
       
       expect(author).to be_a String
-      expect(author).to eq "Nils Linnermark (1908-)"
+      expect(author).to eq "Nils Linnermark (1908-); Second Name (1999-)"
     end
   end
 

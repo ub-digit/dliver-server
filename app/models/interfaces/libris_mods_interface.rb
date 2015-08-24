@@ -12,10 +12,12 @@ class LibrisModsInterface
   end
 
   def author
-    family = @doc.xpath("//mods/name/namePart[@type='family']").text
-    given = @doc.xpath("//mods/name/namePart[@type='given']").text
-    date = @doc.xpath("//mods/name/namePart[@type='date']").text
-    "#{given} #{family} (#{date})"
+    @doc.xpath("//mods/name").map do |name| 
+      family = name.xpath("namePart[@type='family']").text
+      given = name.xpath("namePart[@type='given']").text
+      date = name.xpath("namePart[@type='date']").text
+      "#{given} #{family} (#{date})"
+    end.join("; ")
   end
 
   def title

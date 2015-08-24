@@ -18,7 +18,7 @@ RSpec.describe MetsPackage, type: :model do
     end
 
     it "should have author" do
-      expect(@mets_package.author).to eq("Nils Linnermark (1908-)")
+      expect(@mets_package.author).to eq "Nils Linnermark (1908-); Second Name (1999-)"
     end
 
     it "should have year" do
