@@ -124,7 +124,7 @@ class MetsInterface
   end
 
   def search_string
-    (wrapped_object.search_string + id).norm
+    (wrapped_object.search_string + " " + id).norm
   end
 
   def year
