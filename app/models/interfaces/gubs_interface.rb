@@ -28,6 +28,10 @@ class GubsInterface
     end
   end
 
+  def publisher
+    ""
+  end
+
   def title
     if source == "document"
       return @doc.xpath("//gubs/manuscript/#{source}/unittitle").text

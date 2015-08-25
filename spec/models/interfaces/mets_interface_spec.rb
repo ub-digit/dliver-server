@@ -96,6 +96,16 @@ RSpec.describe MetsInterface, type: :model do
       end
     end
   end
+ 
+  describe "page_count" do
+    context "for libris xml with files" do
+      it "should return value for number of pages" do
+        page_count = @libris_mets_interface.page_count
+        
+        expect(page_count).to eq 88
+      end
+    end
+  end
 
   describe "wrapped object" do
     context "for libris xml mods interface" do

@@ -40,7 +40,25 @@ class LibrisModsInterface
     [title, sub_title, alt_title, alt_sub_title, author].join(" ").norm
   end
 
+  # There is not enough information in the MODS to select a proper publisher.
+  # We pick the first one only.
+  def publisher
+    publisher = @doc.xpath("//mods/originInfo/publisher").first
+    return publisher.text if publisher.present?
+    ""
+  end
+
   def year
-    @doc.xpath("//mods/originInfo/dateIssued[not(@*)]").text
+    if @doc.xpath("//mods/originInfo/dateIssued[@encoding='marc']")
+      year_start = @doc.xpath("//mods/originInfo/dateIssued[@encoding='marc'][@point='start']")
+      year_end = @doc.xpath("//mods/originInfo/dateIssued[@encoding='marc'][@point='end']")
+      if year_start.present? && year_end.present?
+        return "#{year_start.text}-#{year_end.text}"
+      end
+      return @doc.xpath("//mods/originInfo/dateIssued[@encoding='marc']").text
+    end
+    year = @doc.xpath("//mods/originInfo/dateIssued[not(@*)]").first
+    return year.text if year.present?
+    ""
   end
 end

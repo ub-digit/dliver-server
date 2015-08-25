@@ -104,9 +104,11 @@ class MetsPackage < ActiveRecord::Base
       copyright_status: mets_object.copyright_status,
       creator_agent: mets_object.creator_agent,
       archivist_agent: mets_object.archivist_agent,
-      file_groups: mets_object.file_groups,
       catalog_id: mets_object.catalog_id,
-      source: mets_object.source
+      source: mets_object.source,
+      page_count: mets_object.page_count,
+      publisher: mets_object.publisher,
+      file_groups: mets_object.file_groups
     })
   end
 
