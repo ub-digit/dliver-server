@@ -1,8 +1,20 @@
 class AssetsController < ApplicationController
 
+  before_filter :validate_access
   def file
     # Job PDF asset
     package = MetsPackage.find_by_name(params[:package_name])
+    # Make sure user has proper rights to download file
+    if package.copyrighted?
+      if @current_user.has_right?('admin')
+        # Do nothing
+      else
+        error_msg(ErrorCodes::AUTH_ERROR, "You do not have the proper rights to download this file")
+        render_json
+        return
+      end
+    end
+
     file_data = package.find_file_by_file_id(params[:file_id]) if package
     full_path = APP_CONFIG["store_path"] + "/" + package.name + "/" + file_data[:location] if file_data
     if !package
