@@ -23,6 +23,11 @@ class V1::MetsPackagesController < ApplicationController
         @response[:mets_package][:unlocked_until_date] = @unlocked_until_date
       end
 
+      # If user is admin, include links
+      if @current_user.has_right?('admin')
+        @response[:mets_package][:links] = Link.where(package_name: package.name)
+      end
+
     else
       error_msg(ErrorCodes::OBJECT_ERROR, "Could not find package with name #{params[:package_name]}")
     end
