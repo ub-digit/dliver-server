@@ -1,7 +1,6 @@
 class V1::LinksController < V1::ApiController
-  before_filter -> { validate_rights 'admin' }, only: [:create, :update, :destroy]
-  before_filter -> { validate_rights 'admin' }, only: [:index]
-
+  before_filter -> { validate_rights 'admin' }, only: [:index, :create, :update, :destroy]
+  
   def index
     @response[:links] = Link.where(package_name: params[:package_name])
     render_json

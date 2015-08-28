@@ -19,6 +19,14 @@ class MetsInterface
     return DateTime.iso8601(@doc.xpath('//mets:metsHdr/@LASTMODDATE').to_s)
   end
 
+  # Returns highest page count for the various file groups
+  # This equals the number of pages in the package
+  # We therefor need to run file_groups before this to count files
+  def page_count
+    file_groups
+    @highest_page_count
+  end
+
   # Returns an array of all agents in document
   def agents
     return @agents unless @agents.nil?
@@ -67,6 +75,7 @@ class MetsInterface
   def file_groups
     return @file_groups unless @file_groups.nil?
     @file_groups = []
+    @highest_page_count = 0
     
     file_groups_xml = @doc.xpath('//mets:fileSec/mets:fileGrp')
     file_groups_xml.each do |file_group|
@@ -79,6 +88,9 @@ class MetsInterface
        file_object[:id] = file.attr('ID').to_s
        file_object[:location] = file.xpath('.//mets:FLocat').first.attr('xlink:href').to_s
        files << file_object
+      end
+      if files.count > @highest_page_count
+        @highest_page_count = files.count
       end
 
       file_group_object[:files] = files
@@ -123,8 +135,12 @@ class MetsInterface
     wrapped_object.author
   end
 
+  def publisher
+    wrapped_object.publisher
+  end
+
   def search_string
-    (wrapped_object.search_string + id).norm
+    (wrapped_object.search_string + " " + id).norm
   end
 
   def year

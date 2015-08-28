@@ -28,6 +28,10 @@ class GubsInterface
     end
   end
 
+  def publisher
+    ""
+  end
+
   def title
     if source == "document"
       return @doc.xpath("//gubs/manuscript/#{source}/unittitle").text
@@ -36,7 +40,7 @@ class GubsInterface
       unitdate = @doc.xpath("//gubs/manuscript/#{source}/unitdate").text
       constructed_title = "Brev från #{sender[0]} #{sender[1]} till #{recipient[0]} #{recipient[1]}"
       if unitdate != "-"
-        contructed_title += " (#{unitdate})"
+        constructed_title += " (#{unitdate})"
       end
       return constructed_title
     end
