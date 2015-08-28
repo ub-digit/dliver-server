@@ -54,7 +54,7 @@ RSpec.describe V1::MetsPackagesController, type: :controller do
       end
 
       it "should return publisher" do
-        get :show, name: @libris_package.name
+        get :show, package_name: @libris_package.name
         expect(json['mets_package']['publisher']).to be_present
       end
     end
@@ -64,32 +64,48 @@ RSpec.describe V1::MetsPackagesController, type: :controller do
       end
 
       it "should return existing item" do
-        get :show, name: @libris_package.name
+        get :show, package_name: @libris_package.name
         expect(json['mets_package']).to_not be_nil
         expect(response.status).to eq(200)
       end
 
       it "should return page_count" do
-        get :show, name: @libris_package.name
+        get :show, package_name: @libris_package.name
         expect(json['mets_package']['page_count']).to eq(88)
         expect(response.status).to eq(200)
       end
 
       it "should return 404 on non-existing item" do
-        get :show, name: "Does not exist"
+        get :show, package_name: "Does not exist"
         expect(json['mets_package']).to be_nil
         expect(json['error']).to_not be_nil
         expect(response.status).to eq(404)
       end
 
       it "should not return mets xml" do
-        get :show, name: @libris_package.name
+        get :show, package_name: @libris_package.name
         expect(json['mets_package']['xml']).to be_nil
       end
 
       it "should not return metadata field" do
-        get :show, name: @libris_package.name
+        get :show, package_name: @libris_package.name
         expect(json['mets_package']['metadata']).to be_nil
+      end
+    end
+    context "copyrighted package" do
+      before :each do
+        MetsPackage.sync
+        @copyrighted_package = MetsPackage.find_by_name("GUB0109443")
+      end
+      it "should have unlocked flag with link_hash" do
+        expire_date = Time.now + (60*60*24) #Today plus one day
+        link = Link.generate("GUB0109443", expire_date)
+        link.save
+        get :show, package_name: @copyrighted_package.name, link_hash: link.link_hash
+      end
+
+      it "should contain unlocked flag with link_hash" do
+        get :show, package_name: @copyrighted_package.name
       end
     end
   end

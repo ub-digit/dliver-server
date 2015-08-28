@@ -4,6 +4,11 @@ class AssetsController < ApplicationController
   before_filter :validate_files_access
 
   def file
+    if @file_access == false
+      error_msg(ErrorCodes::AUTH_ERROR, "You don't have permission to download this file")
+      render_json
+      return
+    end
     # Job PDF asset
     package = MetsPackage.find_by_name(params[:package_name])
 

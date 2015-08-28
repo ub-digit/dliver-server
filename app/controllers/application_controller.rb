@@ -92,11 +92,13 @@ class ApplicationController < ActionController::Base
     end
 
     if !package.copyrighted?
-      return true
+      @file_access = true
+      return
     else
       # Validate user rights
       if @current_user.has_right?('admin')
-        return true
+        @file_access = true
+        return
       end
       
       # Validate link_hash if it exists
@@ -115,11 +117,13 @@ class ApplicationController < ActionController::Base
           return
         end
 
+        @unlocked = true
+        @unlocked_until_date = link.expire_date
+
         return true
       end
-      error_msg(ErrorCodes::AUTH_ERROR, "You do not have the proper rights to download this file") 
-      render_json 
-      return
+      @file_access = false
+      return false
     end
   end
 end

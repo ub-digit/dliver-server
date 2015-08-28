@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     get 'config/role_list', to: 'config#role_list'
 
     # Mets Package API
-    resources :mets_packages, param: :name
+    resources :mets_packages, param: :package_name
 
     # User API
     resources :users
