@@ -90,14 +90,15 @@ class ApplicationController < ActionController::Base
       render_json
       return
     end
+    @unlocked = false
 
     if !package.copyrighted?
-      @file_access = true
+      @unlocked = true
       return
     else
       # Validate user rights
       if @current_user.has_right?('admin')
-        @file_access = true
+        @unlocked = true
         return
       end
       
@@ -119,10 +120,8 @@ class ApplicationController < ActionController::Base
 
         @unlocked = true
         @unlocked_until_date = link.expire_date
-
         return true
       end
-      @file_access = false
       return false
     end
   end

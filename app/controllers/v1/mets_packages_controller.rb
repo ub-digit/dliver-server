@@ -18,7 +18,7 @@ class V1::MetsPackagesController < ApplicationController
     if package
       @response[:mets_package] = package.as_json
       
-      if @unlocked #If package is unlocked via link_hash
+      if @unlocked 
         @response[:mets_package][:unlocked] = @unlocked
         @response[:mets_package][:unlocked_until_date] = @unlocked_until_date
       end

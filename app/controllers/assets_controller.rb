@@ -4,7 +4,7 @@ class AssetsController < ApplicationController
   before_filter :validate_files_access
 
   def file
-    if @file_access == false
+    if @unlocked == false
       error_msg(ErrorCodes::AUTH_ERROR, "You don't have permission to download this file")
       render_json
       return
