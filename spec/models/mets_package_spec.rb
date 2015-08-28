@@ -44,11 +44,14 @@ RSpec.describe MetsPackage, type: :model do
   end
 
   describe "sync" do
+    before :each do
+      @package_count = 13 # Number of packages in folder fixtures/test-packages
+    end
     context "no data in database" do
       it "should read all files in configured path structure and import them" do
         expect(MetsPackage.count).to eq(0)
         MetsPackage.sync
-        expect(MetsPackage.count).to eq(12)
+        expect(MetsPackage.count).to eq(@package_count)
       end
     end
 
@@ -59,9 +62,9 @@ RSpec.describe MetsPackage, type: :model do
       end
 
       it "should purge the removed package from database" do
-        expect(MetsPackage.count).to eq(13)
+        expect(MetsPackage.count).to eq(@package_count+1)
         MetsPackage.sync
-        expect(MetsPackage.count).to eq(12)
+        expect(MetsPackage.count).to eq(@package_count)
       end
     end
 
@@ -72,9 +75,9 @@ RSpec.describe MetsPackage, type: :model do
       end
 
       it "should purge the removed package from database" do
-        expect(MetsPackage.count).to eq(11)
+        expect(MetsPackage.count).to eq(@package_count-1)
         MetsPackage.sync
-        expect(MetsPackage.count).to eq(12)
+        expect(MetsPackage.count).to eq(@package_count)
       end
     end
 
@@ -87,9 +90,9 @@ RSpec.describe MetsPackage, type: :model do
       it "should purge the removed package from database" do
         changed = MetsPackage.find_by_xmlhash("something_else")
         expect(changed).to_not be_nil
-        expect(MetsPackage.count).to eq(12)
+        expect(MetsPackage.count).to eq(@package_count)
         MetsPackage.sync
-        expect(MetsPackage.count).to eq(12)
+        expect(MetsPackage.count).to eq(@package_count)
         changed = MetsPackage.find_by_xmlhash("something_else")
         expect(changed).to be_nil
       end

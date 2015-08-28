@@ -82,4 +82,44 @@ class ApplicationController < ActionController::Base
     return nil if !token_response
     token_response[/^Token (.*)/,1]
   end
+
+  def validate_files_access
+    package = MetsPackage.find_by_name(params[:package_name])
+    if !package
+      error_msg(ErrorCodes::OBJECT_ERROR, "Could not find package with name: #{params[:package_name]}")
+      render_json
+      return
+    end
+
+    if !package.copyrighted?
+      return true
+    else
+      # Validate user rights
+      if @current_user.has_right?('admin')
+        return true
+      end
+      
+      # Validate link_hash if it exists
+      if params[:link_hash].present?
+        link = Link.where(link_hash: params[:link_hash], package_name: package.name).first
+        # Check if link exists
+        if !link
+          error_msg(ErrorCodes::OBJECT_ERROR, "Link does not exist for package #{package.name}")
+          render_json
+          return
+        end
+        #Check if link is still valid
+        if link.expire_date < Time.now
+          error_msg(ErrorCodes::AUTH_ERROR, "Link is expired since #{link.expire_date}")
+          render_json
+          return
+        end
+
+        return true
+      end
+      error_msg(ErrorCodes::AUTH_ERROR, "You do not have the proper rights to download this file") 
+      render_json 
+      return
+    end
+  end
 end

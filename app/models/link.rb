@@ -19,4 +19,5 @@ class Link < ActiveRecord::Base
       @errors.add(:expire_date, "Expire date cannot be in the past")
     end
   end
+
 end

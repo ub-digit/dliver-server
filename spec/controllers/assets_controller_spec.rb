@@ -5,6 +5,9 @@ RSpec.describe AssetsController, type: :controller do
     MetsPackage.sync
     @test_pdf = File.read("spec/fixtures/test-packages/GUB0100143/pdf/GUB0100143.pdf")
     @test_pdf_digest = Digest::SHA256.hexdigest(@test_pdf)
+    @test_pdf_copyrighted = File.read("spec/fixtures/test-packages/GUB0109443/pdf/GUB0109443.pdf")
+    @test_pdf_copyrighted_digest = Digest::SHA256.hexdigest(@test_pdf)
+
   end
 
   describe "get file" do
@@ -35,6 +38,17 @@ RSpec.describe AssetsController, type: :controller do
     it "should give error if file is copyrighted and user is not authorized" do
       get :file, package_name: "GUB0109443", file_id: "pdfGUB0109443"
       expect(response.status).to eq(401)
+    end
+
+    it "should allow user access to copyrighted package if valid link is given" do
+      expire_date = Time.now + (60*60*24) #Today plus one day
+      link = Link.generate("GUB0109443", expire_date)
+      link.save
+
+      get :file, package_name: "GUB0109443", file_id: "pdfGUB0109443", link_hash: link.link_hash
+
+      expect(Digest::SHA256.hexdigest(response.body)).to eq(@test_pdf_copyrighted_digest)
+      expect(response.status).to eq(200)
     end
   end
 end
