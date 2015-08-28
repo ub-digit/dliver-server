@@ -5,7 +5,7 @@ class AssetsController < ApplicationController
     # Job PDF asset
     package = MetsPackage.find_by_name(params[:package_name])
     # Make sure user has proper rights to download file
-    if package.copyrighted?
+    if package && package.copyrighted?
       if @current_user.has_right?('admin')
         # Do nothing
       else

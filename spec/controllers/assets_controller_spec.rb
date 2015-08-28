@@ -31,5 +31,10 @@ RSpec.describe AssetsController, type: :controller do
       expect(json['error']).to_not be_nil
       expect(response.status).to eq(404)
     end
+
+    it "should give error if file is copyrighted and user is not authorized" do
+      get :file, package_name: "GUB0109443", file_id: "pdfGUB0109443"
+      expect(response.status).to eq(401)
+    end
   end
 end
