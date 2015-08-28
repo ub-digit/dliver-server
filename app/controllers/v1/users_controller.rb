@@ -12,7 +12,7 @@ class V1::UsersController < V1::ApiController
     render_json
   end
 
-  # Creates a User 
+  # Creates a User
   api :POST, '/users', 'Creates a new User'
   example '{"user": {"username": "newUser", "name":"John Doe", "email": "testuser@test.com", "role":"ADMIN""}}'
   def create
@@ -26,7 +26,6 @@ class V1::UsersController < V1::ApiController
       @response[:user] = user
       render_json(201)
     end
-
   end
 
   # Updates a User
