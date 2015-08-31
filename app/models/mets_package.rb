@@ -131,7 +131,11 @@ class MetsPackage < ActiveRecord::Base
 
     packages_to_add(files).each do |package_name| 
       xmldata = xml_from_package_name(files, package_name)
-      MetsPackage.create(xml: xmldata)
+      begin
+        MetsPackage.create(xml: xmldata)
+      rescue => e
+        STDERR.puts "Error on: #{package_name}: #{e.message}"
+      end
     end
   end
 

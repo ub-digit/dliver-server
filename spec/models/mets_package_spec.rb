@@ -55,7 +55,7 @@ RSpec.describe MetsPackage, type: :model do
 
   describe "sync" do
     before :each do
-      @package_count = 13 # Number of packages in folder fixtures/test-packages
+      @package_count = 14 # Number of packages in folder fixtures/test-packages
     end
     context "no data in database" do
       it "should read all files in configured path structure and import them" do

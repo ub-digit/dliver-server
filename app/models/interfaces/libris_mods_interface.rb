@@ -1,6 +1,8 @@
 class LibrisModsInterface
   def initialize(xml)
     @doc = Nokogiri::XML(xml)
+#    @ns = {mods: "http://www.loc.gov/mods/v3"}
+    @doc.remove_namespaces!
   end
 
   def source

@@ -102,6 +102,13 @@ RSpec.describe LibrisModsInterface, type: :model do
     before :each do
       MetsPackage.sync
       @libris_mods_interface = MetsPackage.find_by_name("GUB0101403").mets_object.wrapped_object
+      @package = MetsPackage.find_by_name("GUB0104571")
+    end
+
+    describe "language" do
+      it "should have package" do
+        expect(@package).to_not be_nil
+      end
     end
 
     describe "multiple dateIssued" do
