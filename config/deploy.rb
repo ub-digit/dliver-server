@@ -13,10 +13,6 @@ set :tmp_dir, '/home/rails/tmp'
 # Copy originals into /{app}/shared/config from respective sample file
 set :linked_files, %w{config/database.yml config/config_secret.yml config/passwd}
 
-server 'stagingserver.com', user: 'user', roles: %w{app db web}
-
-set :deploy_to, '/remote/path/to/app'
-
 set :rvm_ruby_string, :local              # use the same ruby as used locally for deployment
 
 # Forces user to assign a valid tag for deploy
