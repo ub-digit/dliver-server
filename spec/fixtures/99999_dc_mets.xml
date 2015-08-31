@@ -15,6 +15,7 @@
 	  <dc:title>Test title</dc:title>
 	  <dc:creator>Test author</dc:creator>
 	  <dc:date>1966</dc:date>
+	  <dc:type>book</dc:type>
 	  <dc:identifier>gupea:2077/12345</dc:identifier>
 	  <dc:language>swe</dc:language>
 	</dc>

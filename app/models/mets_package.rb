@@ -12,6 +12,7 @@ class MetsPackage < ActiveRecord::Base
       generate_sub_title
       generate_author
       generate_year
+      generate_type_of_record
       generate_search_string
       generate_copyright
       generate_metadata
@@ -41,6 +42,11 @@ class MetsPackage < ActiveRecord::Base
   # Sets year from xml
   def generate_year
     self.year = mets_object.year
+  end
+
+  # Sets type_of_record from xml
+  def generate_type_of_record
+    self.type_of_record = mets_object.type_of_record
   end
 
   # Sets search_string from xml

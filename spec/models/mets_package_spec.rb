@@ -25,6 +25,11 @@ RSpec.describe MetsPackage, type: :model do
       expect(@mets_package.year).to eq("1960")
     end
 
+    it "should have type_of_record" do
+      expect(@mets_package.type_of_record).to be_a(Array)
+      expect(@mets_package.type_of_record).to include("theses")
+    end
+
     it "should have search_string" do
       expect(@mets_package.search_string).to match(/podsol och brunjord/)
       expect(@mets_package.search_string).to match(/en studie/)

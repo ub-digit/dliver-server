@@ -20,6 +20,10 @@ class DcInterface
     @doc.xpath("//dc/dc:language").text
   end
 
+  def type_of_record
+    @doc.xpath("//dc/dc:type").map(&:text)
+  end
+
   def publisher
     ""
   end

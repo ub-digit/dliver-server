@@ -28,6 +28,15 @@ class LibrisModsInterface
     @doc.xpath("//mods/language[not(@*)]/languageTerm").first.text
   end
 
+  def type_of_record
+    types = []
+    @doc.xpath("//mods/genre").each do |genre| 
+      types << genre.text
+    end
+    types << @doc.xpath("//mods/typeOfResource").text
+    types
+  end
+
   def sub_title
     @doc.xpath("//mods/titleInfo[not(@type)]/subTitle").text
   end

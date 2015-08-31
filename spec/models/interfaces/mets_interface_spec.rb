@@ -133,6 +133,10 @@ RSpec.describe MetsInterface, type: :model do
         expect(@libris_mets_interface.language).to match(/swe/)
       end
 
+      it "should return type_of_record" do
+        expect(@libris_mets_interface.type_of_record).to include("theses")
+      end
+
       it "should return search string" do
         expect(@libris_mets_interface.search_string).to match(/podsol.*vegetation.*nils/)
       end

@@ -139,6 +139,10 @@ class MetsInterface
     wrapped_object.language
   end
 
+  def type_of_record
+    wrapped_object.type_of_record
+  end
+
   def publisher
     wrapped_object.publisher
   end

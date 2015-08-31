@@ -46,6 +46,16 @@ RSpec.describe GubsInterface, type: :model do
       end
     end
 
+    describe "type_of_record" do
+      it "should return correct type_of_record string" do
+        type_of_record = @gubs_interface.type_of_record
+        
+        expect(type_of_record).to be_a Array
+        expect(type_of_record).to include("manuscript")
+        expect(type_of_record).to include("document")
+      end
+    end
+
     describe "search_string" do
       it "should return correct search string" do
         search_string = @gubs_interface.search_string
@@ -116,6 +126,25 @@ RSpec.describe GubsInterface, type: :model do
         
         expect(sub_title).to be_a String
         expect(sub_title).to eq ""
+      end
+    end
+
+    describe "language" do
+      it "should return correct language string" do
+        language = @gubs_interface.language
+        
+        expect(language).to be_a String
+        expect(language).to eq "swe"
+      end
+    end
+
+    describe "type_of_record" do
+      it "should return correct type_of_record string" do
+        type_of_record = @gubs_interface.type_of_record
+        
+        expect(type_of_record).to be_a Array
+        expect(type_of_record).to include("manuscript")
+        expect(type_of_record).to include("letter")
       end
     end
 

@@ -44,6 +44,15 @@ RSpec.describe DcInterface, type: :model do
     end
   end
 
+  describe "type_of_record" do
+    it "should return correct type_of_record string" do
+      type_of_record = @dc_interface.type_of_record
+      
+      expect(type_of_record).to be_a Array
+      expect(type_of_record).to include("book")
+    end
+  end
+
   describe "search_string" do
     it "should return correct search string" do
       search_string = @dc_interface.search_string

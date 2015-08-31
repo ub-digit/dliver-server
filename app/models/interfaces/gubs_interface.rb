@@ -24,6 +24,10 @@ class GubsInterface
     MAPPED_LANG[lang_string] || lang_string
   end
 
+  def type_of_record
+    ["manuscript", source]
+  end
+
   def author
     if source == "document"
       family = @doc.xpath("//gubs/manuscript/document/originator/name-family").text
