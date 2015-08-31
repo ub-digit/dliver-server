@@ -75,6 +75,12 @@ RSpec.describe V1::MetsPackagesController, type: :controller do
         expect(response.status).to eq(200)
       end
 
+      it "should return language" do
+        get :show, package_name: @libris_package.name
+        expect(json['mets_package']['language']).to eq("swe")
+        expect(response.status).to eq(200)
+      end
+
       it "should return 404 on non-existing item" do
         get :show, package_name: "Does not exist"
         expect(json['mets_package']).to be_nil

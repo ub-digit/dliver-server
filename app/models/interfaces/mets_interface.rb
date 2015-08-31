@@ -135,6 +135,10 @@ class MetsInterface
     wrapped_object.author
   end
 
+  def language
+    wrapped_object.language
+  end
+
   def publisher
     wrapped_object.publisher
   end

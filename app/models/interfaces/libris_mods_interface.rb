@@ -24,6 +24,10 @@ class LibrisModsInterface
     @doc.xpath("//mods/titleInfo[not(@type)]/title").text
   end
 
+  def language
+    @doc.xpath("//mods/language[not(@*)]/languageTerm").first.text
+  end
+
   def sub_title
     @doc.xpath("//mods/titleInfo[not(@type)]/subTitle").text
   end

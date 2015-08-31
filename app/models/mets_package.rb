@@ -66,6 +66,7 @@ class MetsPackage < ActiveRecord::Base
     hash[:creator_agent] = mets_object.creator_agent
     hash[:archivist_agent] = mets_object.archivist_agent
     hash[:file_groups] = mets_object.file_groups
+    hash[:language] = mets_object.language
     hash[:catalog_id] = mets_object.wrapped_object.id
     hash[:source] = mets_object.wrapped_object.source
     self.metadata = hash.to_json
@@ -104,6 +105,7 @@ class MetsPackage < ActiveRecord::Base
       copyright_status: mets_object.copyright_status,
       creator_agent: mets_object.creator_agent,
       archivist_agent: mets_object.archivist_agent,
+      language: mets_object.language,
       catalog_id: mets_object.catalog_id,
       source: mets_object.source,
       page_count: mets_object.page_count,

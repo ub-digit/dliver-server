@@ -41,6 +41,11 @@ RSpec.describe MetsPackage, type: :model do
       expect(metadata["source"]).to eq("libris")
     end
 
+    it "should have language" do
+      metadata = JSON.parse(@mets_package.metadata)
+      expect(metadata["language"]).to eq("swe")
+    end
+
   end
 
   describe "sync" do

@@ -129,6 +129,10 @@ RSpec.describe MetsInterface, type: :model do
         expect(@libris_mets_interface.author).to match(/Nils/)
       end
 
+      it "should return language" do
+        expect(@libris_mets_interface.language).to match(/swe/)
+      end
+
       it "should return search string" do
         expect(@libris_mets_interface.search_string).to match(/podsol.*vegetation.*nils/)
       end

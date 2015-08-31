@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 class GubsInterface
+  MAPPED_LANG = {
+    "Svenska" => "swe"
+  }
+  
   def initialize(xml)
     @doc = Nokogiri::XML(xml)
   end
@@ -13,6 +17,11 @@ class GubsInterface
 
   def id
     @doc.xpath("//gubs/manuscript").attr('hd-id').text
+  end
+
+  def language
+    lang_string = @doc.xpath("//gubs/manuscript/#{source}/language").text
+    MAPPED_LANG[lang_string] || lang_string
   end
 
   def author

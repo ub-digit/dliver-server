@@ -16,6 +16,10 @@ class DcInterface
     @doc.xpath("//dc/dc:creator").text
   end
 
+  def language
+    @doc.xpath("//dc/dc:language").text
+  end
+
   def publisher
     ""
   end

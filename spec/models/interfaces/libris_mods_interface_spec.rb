@@ -37,6 +37,15 @@ RSpec.describe LibrisModsInterface, type: :model do
       end
     end
 
+    describe "language" do
+      it "should return correct language string" do
+        language = @libris_mods_interface.language
+        
+        expect(language).to be_a String
+        expect(language).to eq "swe"
+      end
+    end
+
     describe "search_string" do
       it "should return correct search string" do
         search_string = @libris_mods_interface.search_string
