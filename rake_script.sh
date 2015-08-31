@@ -6,4 +6,4 @@ PATH=$PATH:/usr/local/bin
 DIR=/data/test/dLiver/current
 cd $DIR
 rvm use 2.1.5
-rake "$1"
+RAILS_ENV=lab rake "$1"
