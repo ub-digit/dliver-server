@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
   def validate_key
     return if @current_user
     api_key = params[:api_key]
-    api_user = APP_CONFIG["api_key_users"].find{|x| x["api_key"] == api_key}
+    api_user = APP_CONFIG["api_key_users"].find{|x| !x.nil? && x["api_key"] == api_key}
     if api_user
       api_user = api_user.dup
       api_user.delete("api_key")
