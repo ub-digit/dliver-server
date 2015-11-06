@@ -23,7 +23,7 @@ class AssetsController < ApplicationController
     else
       file = File.open(full_path)
       @response = {ok: "success"}
-      send_data file.read, filename: params[:file_name], disposition: "inline"
+      send_data file.read, filename: file_data[:name], disposition: "inline"
     end
   end
 end
