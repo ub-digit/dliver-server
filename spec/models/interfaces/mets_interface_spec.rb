@@ -125,8 +125,8 @@ RSpec.describe MetsInterface, type: :model do
         expect(@libris_mets_interface.sub_title).to match(/en studie av vegetation/)
       end
 
-      it "should return author" do
-        expect(@libris_mets_interface.author).to match(/Nils/)
+      it "should return authors" do
+        expect(@libris_mets_interface.authors).to match(/Nils/)
       end
 
       it "should return language" do

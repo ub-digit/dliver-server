@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="dliver" version="1.5">
+  <field name="_version_" type="long" indexed="true" stored="true"/>
+  <field name="_root_" type="string" indexed="true" stored="false"/>
+  <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+  <field name="catalog_id" type="string" indexed="true" stored="true" />
+  <field name="name" type="string" indexed="true" stored="true"/>
+  <field name="title" type="string" indexed="true" stored="true"/>
+  <field name="sub_title" type="string" indexed="true" stored="true"/>
+  <field name="alt_title" type="string" indexed="true" stored="true" multiValued="true"/>
+  <field name="alt_sub_title" type="string" indexed="true" stored="true" multiValued="true"/>
+  <field name="author" type="text_general" indexed="true" stored="false" multiValued="true"/>
+  <field name="authors" type="string" indexed="false" stored="true"/>
+  <field name="year" type="year" indexed="true" stored="true" multiValued="true"/>
+  <field name="copyrighted" type="boolean" indexed="true" stored="true"/>
+  <field name="type_of_record" type="string" indexed="true" stored="true" multiValued="true"/>
+  <field name="language" type="string" indexed="true" stored="true"/>
+  <field name="source" type="string" indexed="true" stored="true"/>
+  <field name="publisher" type="string" indexed="true" stored="true"/>
+  <field name="page_count" type="int" indexed="true" stored="true"/>
+  <field name="fulltext" type="text_general" indexed="true" stored="false"/>
+
+  <field name="main" type="text_general" indexed="true" stored="true" multiValued="true"/>
+  <field name="all" type="text_general" indexed="true" stored="true" multiValued="true"/>
+  
+  <copyField source="id" dest="main"/>
+  <copyField source="catalog_id" dest="main"/>
+  <copyField source="name" dest="main"/>
+  <copyField source="title" dest="main"/>
+  <copyField source="sub_title" dest="main"/>
+  <copyField source="alt_title" dest="main"/>
+  <copyField source="alt_sub_title" dest="main"/>
+  <copyField source="author" dest="main"/>
+  <copyField source="year" dest="main"/>
+  <copyField source="copyrighted" dest="main"/>
+  <copyField source="type_of_record" dest="main"/>
+  <copyField source="language" dest="main"/>
+  <copyField source="source" dest="main"/>
+  <copyField source="publisher" dest="main"/>
+  <copyField source="page_count" dest="main"/>
+  <copyField source="main" dest="all"/>
+  <copyField source="fulltext" dest="all"/>
+
+  <uniqueKey>id</uniqueKey>
+
+  <defaultSearchField>main</defaultSearchField>
+  <solrQueryParser defaultOperator="AND"/>
+
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
+  <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
+  <fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
+  <fieldType name="float" class="solr.TrieFloatField" precisionStep="0" positionIncrementGap="0"/>
+  <fieldType name="long" class="solr.TrieLongField" precisionStep="0" positionIncrementGap="0"/>
+  <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" positionIncrementGap="0"/>
+  <fieldType name="tint" class="solr.TrieIntField" precisionStep="8" positionIncrementGap="0"/>
+  <fieldType name="tfloat" class="solr.TrieFloatField" precisionStep="8" positionIncrementGap="0"/>
+  <fieldType name="tlong" class="solr.TrieLongField" precisionStep="8" positionIncrementGap="0"/>
+  <fieldType name="tdouble" class="solr.TrieDoubleField" precisionStep="8" positionIncrementGap="0"/>
+  <fieldType name="date" class="solr.TrieDateField" precisionStep="0" positionIncrementGap="0"/>
+  <fieldType name="tdate" class="solr.TrieDateField" precisionStep="6" positionIncrementGap="0"/>
+  <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+    </analyzer>
+  </fieldType>
+
+  <fieldType name="year" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
+
+  <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <!-- <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" /> -->
+      <!-- in this example, we will only use synonyms at query time
+           <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
+      -->
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+<!--      <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+      <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/> -->
+      <filter class="solr.LowerCaseFilterFactory"/>
+    </analyzer>
+  </fieldType>
+  <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
+    <analyzer>
+      <tokenizer class="solr.KeywordTokenizerFactory"/>
+      <filter class="solr.LowerCaseFilterFactory" />
+    </analyzer>
+  </fieldType>
+</schema>

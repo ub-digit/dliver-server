@@ -63,12 +63,12 @@ RSpec.describe DcInterface, type: :model do
     end
   end
 
-  describe "author" do
+  describe "authors" do
     it "should return correct author string" do
-      author = @dc_interface.author
+      authors = @dc_interface.authors
       
-      expect(author).to be_a String
-      expect(author).to eq "Test author"
+      expect(authors).to be_a String
+      expect(authors).to eq "Test author"
     end
   end
 

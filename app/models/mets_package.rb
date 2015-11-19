@@ -36,7 +36,7 @@ class MetsPackage < ActiveRecord::Base
 
   # Sets author from xml
   def generate_author
-    self.author = mets_object.author
+    self.author = mets_object.authors
   end
 
   # Sets year from xml
@@ -122,21 +122,30 @@ class MetsPackage < ActiveRecord::Base
 
   # Sync (import new, delete removed, update existing) from filesystem
   def self.sync
+    search_engine = SearchEngine.new
     files = files_in_store
+#    search_engine.clear(confirm: true)
     remove_packages_to_update(files)
 
     packages_to_delete(files).each do |package_name| 
-      MetsPackage.find_by_name(package_name).destroy
+      package = MetsPackage.find_by_name(package_name)
+      search_engine.delete_from_index(package_id: package.id)
+      package.destroy
     end
 
     packages_to_add(files).each do |package_name| 
       xmldata = xml_from_package_name(files, package_name)
       begin
-        MetsPackage.create(xml: xmldata)
+        package = MetsPackage.create(xml: xmldata)
+        update_index(search_engine, package)
       rescue => e
         STDERR.puts "Error on: #{package_name}: #{e.message}"
+        raise e
       end
     end
+
+  ensure
+    search_engine.commit
   end
 
   # Return array of files data from all mets xml files in the path structure
@@ -199,5 +208,46 @@ class MetsPackage < ActiveRecord::Base
   # We will add packages if they are in the filesystem, but not yet in the database
   def self.packages_to_add(files)
     packages_in_store(files) - packages_in_db
+  end
+
+  def self.years_from_year_field(year_field)
+    return [] if year_field.blank?
+    if year_field[/^\d+$/]
+      return [year_field.to_i]
+    end
+
+    if year_field[/^(\d+)-(\d+)$/]
+      return Range.new($1.to_i, $2.to_i).to_a
+    end
+
+    return []
+  end
+
+  def self.update_index(search_engine, package)
+    years = years_from_year_field(package.year)
+    numeric_package_name = package.name[/^GUB(\d+)$/, 1].to_i
+
+    indexed_authors = package.mets_object.author.map do |author_entry| 
+      "#{author_entry[0]} #{author_entry[1]}"
+    end
+
+    search_engine.add(data: {
+      id: numeric_package_name,
+      name: package.name,
+      title: package.title,
+      sub_title: package.sub_title,
+      author: indexed_authors,
+      authors: package.mets_object.authors,
+      year: years,
+      copyrighted: package.copyrighted,
+      type_of_record: package.type_of_record,
+      language: package.mets_object.language,
+      catalog_id: package.mets_object.catalog_id,
+      source: package.mets_object.source,
+      page_count: package.mets_object.page_count,
+      publisher: package.mets_object.publisher,
+      alt_title: package.mets_object.alt_title,
+      alt_sub_title: package.mets_object.alt_sub_title
+    })
   end
 end
