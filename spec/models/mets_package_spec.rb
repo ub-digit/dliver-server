@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe MetsPackage, type: :model do
+  before :each do
+    WebMock.disable_net_connect!
+  end
+
+  after :each do
+    WebMock.allow_net_connect!
+  end
+
   describe "search_string" do
     it {should validate_presence_of(:search_string)}
   end

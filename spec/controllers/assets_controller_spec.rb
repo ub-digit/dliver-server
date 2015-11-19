@@ -2,12 +2,16 @@ require 'rails_helper'
 
 RSpec.describe AssetsController, type: :controller do
   before :each do
+    WebMock.disable_net_connect!
     MetsPackage.sync
     @test_pdf = File.read("spec/fixtures/test-packages/GUB0100143/pdf/GUB0100143.pdf")
     @test_pdf_digest = Digest::SHA256.hexdigest(@test_pdf)
     @test_pdf_copyrighted = File.read("spec/fixtures/test-packages/GUB0109443/pdf/GUB0109443.pdf")
     @test_pdf_copyrighted_digest = Digest::SHA256.hexdigest(@test_pdf)
+  end
 
+  after :each do
+    WebMock.allow_net_connect!
   end
 
   describe "get file" do

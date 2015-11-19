@@ -131,8 +131,20 @@ class MetsInterface
     wrapped_object.sub_title
   end
 
+  def alt_title
+    wrapped_object.alt_title
+  end
+
+  def alt_sub_title
+    wrapped_object.alt_sub_title
+  end
+
   def author
     wrapped_object.author
+  end
+
+  def authors
+    wrapped_object.authors
   end
 
   def language

@@ -70,12 +70,12 @@ RSpec.describe LibrisModsInterface, type: :model do
       end
     end
 
-    describe "author" do
+    describe "authors" do
       it "should return correct author string" do
-        author = @libris_mods_interface.author
+        authors = @libris_mods_interface.authors
         
-        expect(author).to be_a String
-        expect(author).to eq "Nils Linnermark (1908-); Second Name (1999-)"
+        expect(authors).to be_a String
+        expect(authors).to eq "Nils Linnermark (1908-); Second Name (1999-)"
       end
     end
 

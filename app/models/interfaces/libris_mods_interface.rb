@@ -18,7 +18,16 @@ class LibrisModsInterface
       family = name.xpath("namePart[@type='family']").text
       given = name.xpath("namePart[@type='given']").text
       date = name.xpath("namePart[@type='date']").text
-      "#{given} #{family} (#{date})"
+      [given, family, date]
+    end
+  end
+
+  def authors
+    author.map do |author_entry| 
+      given, family, date = author_entry
+      tmp = "#{given} #{family}"
+      tmp += " (#{date})" if date
+      tmp
     end.join("; ")
   end
 
@@ -44,15 +53,15 @@ class LibrisModsInterface
   end
 
   def alt_title
-    @doc.xpath("//mods/titleInfo[@type='alternative']/title").text
+    @doc.xpath("//mods/titleInfo[@type='alternative']/title").map { |x| x.text }
   end
 
   def alt_sub_title
-    @doc.xpath("//mods/titleInfo[@type='alternative']/subTitle").text
+    @doc.xpath("//mods/titleInfo[@type='alternative']/subTitle").map { |x| x.text }
   end
 
   def search_string
-    [title, sub_title, alt_title, alt_sub_title, author].join(" ").norm
+    [title, sub_title, alt_title.join(" "), alt_sub_title.join(" "), authors].join(" ").norm
   end
 
   # There is not enough information in the MODS to select a proper publisher.

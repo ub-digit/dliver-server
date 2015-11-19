@@ -13,7 +13,11 @@ class DcInterface
   end
 
   def author
-    @doc.xpath("//dc/dc:creator").text
+    [@doc.xpath("//dc/dc:creator").text]
+  end
+
+  def authors
+    author.join("; ")
   end
 
   def language
@@ -34,6 +38,14 @@ class DcInterface
 
   def sub_title
     ""
+  end
+
+  def alt_title
+    []
+  end
+
+  def alt_sub_title
+    []
   end
 
   def search_string

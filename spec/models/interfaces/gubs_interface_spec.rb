@@ -66,12 +66,12 @@ RSpec.describe GubsInterface, type: :model do
       end
     end
 
-    describe "author" do
+    describe "authors" do
       it "should return correct author string" do
-        author = @gubs_interface.author
+        authors = @gubs_interface.authors
         
-        expect(author).to be_a String
-        expect(author).to eq "Eva Arosenius (1906-2004)"
+        expect(authors).to be_a String
+        expect(authors).to eq "Eva Arosenius (1906-2004)"
       end
     end
 
@@ -158,12 +158,12 @@ RSpec.describe GubsInterface, type: :model do
       end
     end
 
-    describe "author" do
+    describe "authors" do
       it "should return correct author string" do
-        author = @gubs_interface.author
+        authors = @gubs_interface.authors
         
-        expect(author).to be_a String
-        expect(author).to eq "Astrid Constantine-Torstensson (1935-)"
+        expect(authors).to be_a String
+        expect(authors).to eq "Astrid Constantine-Torstensson (1935-)"
       end
     end
 

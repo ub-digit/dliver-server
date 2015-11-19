@@ -33,12 +33,16 @@ class GubsInterface
       family = @doc.xpath("//gubs/manuscript/document/originator/name-family").text
       given = @doc.xpath("//gubs/manuscript/document/originator/name-given").text
       date = @doc.xpath("//gubs/manuscript/document/originator/name-date").text
-      return "#{given} #{family} (#{date})"
+      return [given, family, date]
     end
     if source == "letter"
-      sender_data = sender
-      return "#{sender_data[0]} #{sender_data[1]} (#{sender_data[2]})"
+      return sender
     end
+  end
+
+  def authors
+    author_entry = author
+    return "#{author_entry[0]} #{author_entry[1]} (#{author_entry[2]})"
   end
 
   def publisher
@@ -63,6 +67,14 @@ class GubsInterface
     ""
   end
 
+  def alt_title
+    []
+  end
+
+  def alt_sub_title
+    []
+  end
+
   def sender
     family = @doc.xpath("//gubs/manuscript/letter/sender/name-family").text
     given = @doc.xpath("//gubs/manuscript/letter/sender/name-given").text
@@ -78,7 +90,7 @@ class GubsInterface
   end
 
   def search_string
-    [title, sub_title, author].join(" ").norm
+    [title, sub_title, authors].join(" ").norm
   end
 
   def year
