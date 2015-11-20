@@ -4,12 +4,15 @@ class V1::MetsPackagesController < ApplicationController
   before_filter :validate_files_access, only: [:show]
 
   def index
-    packages = MetsPackage.all
-    if params[:query]
-      packages = packages.where("search_string LIKE ?", "%#{params[:query].norm}%").limit(100)
-    end
+    #packages = MetsPackage.all
+  	query = params[:query]
+    packages = solr.get 'select', 
+        :params => {:wt => "json", 
+                    :q => "main:" + query, 
+                    :facet => true, 
+                    "facet.field" => ["author","type_of_record","copyrighted","language"] }
 
-    render json: {mets_packages: packages}, status: 200
+    render json: {mets_packages: packages['response']['docs']}, status: 200
   end
 
   def show
@@ -34,4 +37,8 @@ class V1::MetsPackagesController < ApplicationController
 
     render_json
   end
+  def solr
+    @@rsolr ||= RSolr.connect(url: APP_CONFIG['solr_url'])
+  end
+
 end

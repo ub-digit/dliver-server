@@ -9,7 +9,7 @@
   <field name="sub_title" type="string" indexed="true" stored="true"/>
   <field name="alt_title" type="string" indexed="true" stored="true" multiValued="true"/>
   <field name="alt_sub_title" type="string" indexed="true" stored="true" multiValued="true"/>
-  <field name="author" type="text_general" indexed="true" stored="false" multiValued="true"/>
+  <field name="author" type="string" indexed="true" stored="true" multiValued="true"/>
   <field name="authors" type="string" indexed="false" stored="true"/>
   <field name="year" type="year" indexed="true" stored="true" multiValued="true"/>
   <field name="copyrighted" type="boolean" indexed="true" stored="true"/>
