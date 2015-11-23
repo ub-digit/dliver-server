@@ -6,13 +6,51 @@ class V1::MetsPackagesController < ApplicationController
   def index
     #packages = MetsPackage.all
   	query = params[:query]
-    packages = solr.get 'select', 
-        :params => {:wt => "json", 
-                    :q => "main:" + query, 
+    facet_queries = params[:facet_queries]
+    query_params = {:wt => "json", 
+                    :q => "main: (#{query})",
                     :facet => true, 
-                    "facet.field" => ["author","type_of_record","copyrighted","language"] }
+                    "facet.field" => ["author","type_of_record","copyrighted","language"],
+                    "facet.mincount" => 1,
+                    :hl => true,
+                    "hl.fl" => "main",
+                    "hl.simple.pre" => "<em>",
+                    "hl.simple.post" => "</em>"}
+    
+    if facet_queries.present?
+      query_params[:fq] = facet_queries
+    end
 
-    render json: {mets_packages: packages['response']['docs']}, status: 200
+    # Perform SOLR search
+    result = solr.get('select', params: query_params)
+    docs = result['response']['docs']
+    
+    # Create meta object
+    meta = {}
+    meta[:query] = {}
+    meta[:query][:query] = query # Query string
+    meta[:query][:total] = result['response']['NumFound'] # Total results
+    meta[:query][:facet_fields] = [*result['responseHeader']['params']['facet.field']] # Always return an array of given facet fields
+
+    meta[:facet_counts] = {}
+    meta[:facet_counts][:facet_fields] = {}
+    
+    result['facet_counts']['facet_fields'].each do |field, facets|
+      meta[:facet_counts][:facet_fields][field.to_sym] = facets.each_slice(2).to_a.map{|x| {label: x[0], count: x[1]}} # Create hash structure from facet count array
+    end
+
+    # Loop all docs and inject extra information
+    docs.each do |doc|
+      id = doc['id']
+      doc['highlights'] = []
+      next if result['highlighting'].nil?
+
+      if result['highlighting'][id]
+        doc['highlights'] += result['highlighting'][id]['main']
+      end
+    end
+
+    render json: {mets_packages: docs, meta: meta}, status: 200
   end
 
   def show
