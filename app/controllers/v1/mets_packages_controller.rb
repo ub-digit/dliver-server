@@ -4,33 +4,29 @@ class V1::MetsPackagesController < ApplicationController
   before_filter :validate_files_access, only: [:show]
 
   def index
-    #packages = MetsPackage.all
   	query = params[:query]
-    facet_queries = params[:facet_queries]
-    query_params = {:wt => "json", 
-                    :q => "main: (#{query})",
-                    :facet => true, 
-                    "facet.field" => ["author","type_of_record","copyrighted","language"],
-                    "facet.mincount" => 1,
-                    :hl => true,
-                    "hl.fl" => "main",
-                    "hl.simple.pre" => "<em>",
-                    "hl.simple.post" => "</em>"}
-    
-    if facet_queries.present?
-      query_params[:fq] = facet_queries
+    facet_queries = params[:facet_queries] || []
+
+    # If queries are given on an object array format, translate to Array
+    if facet_queries.is_a? Hash
+      new_array = []
+      facet_queries.each do |key, value|
+        new_array << value
+      end
+      facet_queries = new_array
     end
 
     # Perform SOLR search
-    result = SearchEngine.query(query)
+    result = SearchEngine.query(query, facets: facet_queries)
     docs = result['response']['docs']
     
     # Create meta object
     meta = {}
     meta[:query] = {}
-    meta[:query][:query] = query # Query string
+    meta[:query][:query] = result['responseHeader']['params']['q'] # Query string
     meta[:query][:total] = result['response']['numFound'] # Total results
     meta[:query][:facet_fields] = [*result['responseHeader']['params']['facet.field']] # Always return an array of given facet fields
+    meta[:query][:facet_queries] = [*result['responseHeader']['params']['fq']]
 
     meta[:facet_counts] = {}
     meta[:facet_counts][:facet_fields] = {}
