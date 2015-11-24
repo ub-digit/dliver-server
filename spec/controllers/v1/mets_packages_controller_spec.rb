@@ -3,6 +3,31 @@ require 'rails_helper'
 RSpec.describe V1::MetsPackagesController, type: :controller do
 
   describe "index" do
+    before :each do
+      WebMock.disable_net_connect!
+
+      resultsnippet1 = File.read("spec/fixtures/solr_response_1_item.rb.txt")
+      resultsnippet2 = File.read("spec/fixtures/solr_response_2_items.rb.txt")
+      resultsnippet5 = File.read("spec/fixtures/solr_response_5_items.rb.txt")
+
+      stub_request(:get, "http://localhost:8983/solr/dliver/select?defType=edismax&facet=true&facet.field=language&facet.mincount=1&fl=score,*&hl=true&hl.fl=*&hl.snippets=10&q=text&qf=title%5E100%20author%5E10%20alt_title%20sub_title%20alt_sub_title&wt=ruby").
+        to_return(:status => 200, :body => resultsnippet2, :headers => {})
+
+
+      stub_request(:get, "http://localhost:8983/solr/dliver/select?defType=edismax&facet=true&facet.field=language&facet.mincount=1&fl=score,*&hl=true&hl.fl=*&hl.snippets=10&q=annan&qf=title%5E100%20author%5E10%20alt_title%20sub_title%20alt_sub_title&wt=ruby").
+        to_return(:status => 200, :body => resultsnippet1, :headers => {})
+
+      stub_request(:get, "http://localhost:8983/solr/dliver/select?defType=edismax&facet=true&facet.field=language&facet.mincount=1&fl=score,*&hl=true&hl.fl=*&hl.snippets=10&q=vanlig&qf=title%5E100%20author%5E10%20alt_title%20sub_title%20alt_sub_title&wt=ruby").
+        to_return(:status => 200, :body => resultsnippet2, :headers => {})
+
+      stub_request(:get, "http://localhost:8983/solr/dliver/select?defType=edismax&facet=true&facet.field=language&facet.mincount=1&fl=score,*&hl=true&hl.fl=*&hl.snippets=10&qf=title%5E100%20author%5E10%20alt_title%20sub_title%20alt_sub_title&wt=ruby").
+        to_return(:status => 200, :body => resultsnippet5, :headers => {})
+    end
+
+    after :each do
+      WebMock.allow_net_connect!
+    end
+
     context "for existing mets packages" do
       it "should return a list of mets packages" do
         create_list(:mets_package, 5)

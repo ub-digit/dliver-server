@@ -1,0 +1,15 @@
+{
+  "responseHeader" => {
+    "params" => {
+    }
+  },
+  "response" => {
+    "docs" => [
+      {}
+    ]
+  },
+  "facet_counts" => {
+    "facet_fields" => [
+    ]
+  }
+}

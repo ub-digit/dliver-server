@@ -1,49 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <schema name="dliver" version="1.5">
   <field name="_version_" type="long" indexed="true" stored="true"/>
-  <field name="_root_" type="string" indexed="true" stored="false"/>
-  <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
-  <field name="catalog_id" type="string" indexed="true" stored="true" />
-  <field name="name" type="string" indexed="true" stored="true"/>
-  <field name="title" type="string" indexed="true" stored="true"/>
-  <field name="sub_title" type="string" indexed="true" stored="true"/>
-  <field name="alt_title" type="string" indexed="true" stored="true" multiValued="true"/>
-  <field name="alt_sub_title" type="string" indexed="true" stored="true" multiValued="true"/>
-  <field name="author" type="string" indexed="true" stored="true" multiValued="true"/>
-  <field name="authors" type="string" indexed="false" stored="true"/>
+  <field name="_root_" type="text_general" indexed="true" stored="false"/>
+  <field name="id" type="text_general" indexed="true" stored="true" required="true" multiValued="false" />
+  <field name="catalog_id" type="text_general" indexed="true" stored="true" />
+  <field name="name" type="text_general" indexed="true" stored="true"/>
+  <field name="title" type="text_general" indexed="true" stored="true"/>
+  <field name="sub_title" type="text_general" indexed="true" stored="true"/>
+  <field name="alt_title" type="text_general" indexed="true" stored="true" multiValued="true"/>
+  <field name="alt_sub_title" type="text_general" indexed="true" stored="true" multiValued="true"/>
+  <field name="author" type="text_general" indexed="true" stored="true" multiValued="true"/>
+  <field name="author_facet" type="string" indexed="true" stored="false" multiValued="true"/>
+  <field name="authors" type="text_general" indexed="false" stored="true"/>
   <field name="year" type="year" indexed="true" stored="true" multiValued="true"/>
   <field name="copyrighted" type="boolean" indexed="true" stored="true"/>
   <field name="type_of_record" type="string" indexed="true" stored="true" multiValued="true"/>
-  <field name="language" type="string" indexed="true" stored="true"/>
-  <field name="source" type="string" indexed="true" stored="true"/>
-  <field name="publisher" type="string" indexed="true" stored="true"/>
+  <field name="language" type="text_general" indexed="true" stored="true"/>
+  <field name="source" type="text_general" indexed="true" stored="true"/>
+  <field name="publisher" type="text_general" indexed="true" stored="true"/>
   <field name="page_count" type="int" indexed="true" stored="true"/>
   <field name="fulltext" type="text_general" indexed="true" stored="false"/>
 
-  <field name="main" type="text_general" indexed="true" stored="true" multiValued="true"/>
-  <field name="all" type="text_general" indexed="true" stored="true" multiValued="true"/>
-  
-  <copyField source="id" dest="main"/>
-  <copyField source="catalog_id" dest="main"/>
-  <copyField source="name" dest="main"/>
-  <copyField source="title" dest="main"/>
-  <copyField source="sub_title" dest="main"/>
-  <copyField source="alt_title" dest="main"/>
-  <copyField source="alt_sub_title" dest="main"/>
-  <copyField source="author" dest="main"/>
-  <copyField source="year" dest="main"/>
-  <copyField source="copyrighted" dest="main"/>
-  <copyField source="type_of_record" dest="main"/>
-  <copyField source="language" dest="main"/>
-  <copyField source="source" dest="main"/>
-  <copyField source="publisher" dest="main"/>
-  <copyField source="page_count" dest="main"/>
-  <copyField source="main" dest="all"/>
-  <copyField source="fulltext" dest="all"/>
-
+  <copyField source="author" dest="author_facet"/>
   <uniqueKey>id</uniqueKey>
 
-  <defaultSearchField>main</defaultSearchField>
+  <defaultSearchField>title</defaultSearchField>
   <solrQueryParser defaultOperator="AND"/>
 
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" />
