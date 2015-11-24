@@ -22,14 +22,14 @@ class V1::MetsPackagesController < ApplicationController
     end
 
     # Perform SOLR search
-    result = solr.get('select', params: query_params)
+    result = SearchEngine.query(query)
     docs = result['response']['docs']
     
     # Create meta object
     meta = {}
     meta[:query] = {}
     meta[:query][:query] = query # Query string
-    meta[:query][:total] = result['response']['NumFound'] # Total results
+    meta[:query][:total] = result['response']['numFound'] # Total results
     meta[:query][:facet_fields] = [*result['responseHeader']['params']['facet.field']] # Always return an array of given facet fields
 
     meta[:facet_counts] = {}
@@ -42,11 +42,11 @@ class V1::MetsPackagesController < ApplicationController
     # Loop all docs and inject extra information
     docs.each do |doc|
       id = doc['id']
-      doc['highlights'] = []
+      doc['highlights'] = {}
       next if result['highlighting'].nil?
 
       if result['highlighting'][id]
-        doc['highlights'] += result['highlighting'][id]['main']
+        doc['highlights'] = result['highlighting'][id]
       end
     end
 
@@ -75,8 +75,4 @@ class V1::MetsPackagesController < ApplicationController
 
     render_json
   end
-  def solr
-    @@rsolr ||= RSolr.connect(url: APP_CONFIG['solr_url'])
-  end
-
 end
