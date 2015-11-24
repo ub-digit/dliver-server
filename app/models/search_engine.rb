@@ -29,6 +29,11 @@ class SearchEngine
   def self.query(query, facets: [])
     highlight_maxcount = 10
     facet_fields = ['author_facet', 'type_of_record', 'copyrighted', 'language']
+    
+    facet_queries = []
+    facets.each do |facet|
+      facet_queries << "#{facet['facet']}:\"#{facet['value']}\""
+    end
 
     solr.get('select', params: {
       "defType" => "edismax",
@@ -40,7 +45,8 @@ class SearchEngine
       facet: true,
       "facet.field" => facet_fields,
       "facet.mincount" => 1,
-      fl: "score,*"
+      fl: "score,*",
+      fq: facet_queries
     })
   end
 end
