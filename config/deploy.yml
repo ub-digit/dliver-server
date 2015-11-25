@@ -1,0 +1,26 @@
+production:
+  host: app-production-2.ub.gu.se
+  user: apps
+  roles:
+    - app
+    - db
+    - web
+  path: '/apps/dliver-server'
+
+staging:
+  host: dliver-staging.ub.gu.se
+  user: apps
+  roles:
+    - app
+    - db
+    - web
+  path: '/apps/dliver-server'
+
+lab:
+  host: dliver-lab.ub.gu.se
+  user: apps
+  roles:
+    - app
+    - db
+    - web
+  path: '/apps/dliver-server'
