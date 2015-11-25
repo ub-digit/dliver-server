@@ -103,6 +103,7 @@ RSpec.describe LibrisModsInterface, type: :model do
       MetsPackage.sync
       @libris_mods_interface = MetsPackage.find_by_name("GUB0101403").mets_object.wrapped_object
       @package = MetsPackage.find_by_name("GUB0104571")
+      @ordchron_package = MetsPackage.find_by_name("GUB0104143")
     end
 
     describe "language" do
@@ -123,6 +124,21 @@ RSpec.describe LibrisModsInterface, type: :model do
         
         expect(year).to be_a String
         expect(year).to eq "D. F. Bonniers boktryckeri A.-B."
+      end
+    end
+
+    describe "ordinals" do
+      it "should have ordinals in metadata" do
+        expect(@ordchron_package.metadata['ordinal_1']).to_not be_nil
+        expect(@ordchron_package.metadata['ordinal_2']).to_not be_nil
+      end
+    end
+
+    describe "chronologicals" do
+      it "should have chronologicals in metadata" do
+        expect(@ordchron_package.metadata['chronological_1']).to_not be_nil
+        expect(@ordchron_package.metadata['chronological_2']).to_not be_nil
+        expect(@ordchron_package.metadata['chronological_3']).to_not be_nil
       end
     end
   end

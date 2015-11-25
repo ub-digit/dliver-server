@@ -75,6 +75,7 @@ class MetsPackage < ActiveRecord::Base
     hash[:language] = mets_object.language
     hash[:catalog_id] = mets_object.wrapped_object.id
     hash[:source] = mets_object.wrapped_object.source
+    mets_object.wrapped_object.set_ordinals_chronologicals(hash)
     self.metadata = hash.to_json
   end
 
@@ -247,7 +248,13 @@ class MetsPackage < ActiveRecord::Base
       page_count: package.mets_object.page_count,
       publisher: package.mets_object.publisher,
       alt_title: package.mets_object.alt_title,
-      alt_sub_title: package.mets_object.alt_sub_title
+      alt_sub_title: package.mets_object.alt_sub_title,
+      ordinal_1: package.metadata_hash['ordinal_1'],
+      ordinal_2: package.metadata_hash['ordinal_2'],
+      ordinal_3: package.metadata_hash['ordinal_3'],
+      chronological_1: package.metadata_hash['chronological_1'],
+      chronological_2: package.metadata_hash['chronological_2'],
+      chronological_3: package.metadata_hash['chronological_3'],
     })
   end
 end

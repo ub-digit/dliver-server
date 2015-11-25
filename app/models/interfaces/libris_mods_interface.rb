@@ -5,6 +5,31 @@ class LibrisModsInterface
     @doc.remove_namespaces!
   end
 
+  def set_ordinals_chronologicals(hash)
+    hash[:ordinal_1] = ordinal(1) if ordinal(1)
+    hash[:ordinal_2] = ordinal(2) if ordinal(2)
+    hash[:ordinal_3] = ordinal(3) if ordinal(3)
+    hash[:chronological_1] = chronological(1) if chronological(1)
+    hash[:chronological_2] = chronological(2) if chronological(2)
+    hash[:chronological_3] = chronological(3) if chronological(3)
+  end
+
+  def ordinal(num)
+    caption = @doc.xpath("//mods/part/detail[@type='ordinal_#{num}']/caption").text
+    number = @doc.xpath("//mods/part/detail[@type='ordinal_#{num}']/number").text
+    value = "#{caption} #{number}"
+    return nil if value.blank?
+    value
+  end
+
+  def chronological(num)
+    caption = @doc.xpath("//mods/part/detail[@type='chronological_#{num}']/caption").text
+    number = @doc.xpath("//mods/part/detail[@type='chronological_#{num}']/number").text
+    value = "#{caption} #{number}"
+    return nil if value.blank?
+    value
+  end
+
   def source
     "libris"
   end

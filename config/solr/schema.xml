@@ -19,9 +19,27 @@
   <field name="source" type="text_general" indexed="true" stored="true"/>
   <field name="publisher" type="text_general" indexed="true" stored="true"/>
   <field name="page_count" type="int" indexed="true" stored="true"/>
+  <field name="ordinal_1" type="text_general" indexed="true" stored="true"/>
+  <field name="ordinal_2" type="text_general" indexed="true" stored="true"/>
+  <field name="ordinal_3" type="text_general" indexed="true" stored="true"/>
+  <field name="chronological_1" type="text_general" indexed="true" stored="true"/>
+  <field name="chronological_2" type="text_general" indexed="true" stored="true"/>
+  <field name="chronological_3" type="text_general" indexed="true" stored="true"/>
+  <field name="ordinal_1_facet" type="string" indexed="true" stored="false"/>
+  <field name="ordinal_2_facet" type="string" indexed="true" stored="false"/>
+  <field name="ordinal_3_facet" type="string" indexed="true" stored="false"/>
+  <field name="chronological_1_facet" type="string" indexed="true" stored="false"/>
+  <field name="chronological_2_facet" type="string" indexed="true" stored="false"/>
+  <field name="chronological_3_facet" type="string" indexed="true" stored="false"/>
   <field name="fulltext" type="text_general" indexed="true" stored="false"/>
 
   <copyField source="author" dest="author_facet"/>
+  <copyField source="ordinal_1" dest="ordinal_1_facet"/>
+  <copyField source="ordinal_2" dest="ordinal_2_facet"/>
+  <copyField source="ordinal_3" dest="ordinal_3_facet"/>
+  <copyField source="chronological_1" dest="chronological_1_facet"/>
+  <copyField source="chronological_2" dest="chronological_2_facet"/>
+  <copyField source="chronological_3" dest="chronological_3_facet"/>
   <uniqueKey>id</uniqueKey>
 
   <defaultSearchField>title</defaultSearchField>
