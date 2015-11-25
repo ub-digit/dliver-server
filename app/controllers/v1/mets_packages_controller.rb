@@ -42,7 +42,11 @@ class V1::MetsPackagesController < ApplicationController
       next if result['highlighting'].nil?
 
       if result['highlighting'][id]
-        doc['highlights'] = result['highlighting'][id]
+        highlights_array = []
+        result['highlighting'][id].each do |field, array|
+          highlights_array << {field: field, highlight: array.first}
+        end
+        doc['highlights'] = highlights_array
       end
     end
 

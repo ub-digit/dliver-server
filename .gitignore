@@ -21,7 +21,7 @@ config/config_secret.yml
 config/initializers/api_key.rb
 config/initializers/config.rb
 config/passwd
-config/deploy/*.rb
+config/deploy.yml
 
 
 *~
