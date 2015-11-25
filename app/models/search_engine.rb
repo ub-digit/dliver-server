@@ -28,7 +28,28 @@ class SearchEngine
 
   def self.query(query, facets: [])
     highlight_maxcount = 10
-    facet_fields = ['author_facet', 'type_of_record', 'copyrighted', 'language']
+    facet_fields = [
+      'author_facet',
+      'type_of_record',
+      'copyrighted',
+      'language',
+      'ordinal_1_facet',
+      'ordinal_2_facet',
+      'ordinal_3_facet'
+    ]
+    query_fields = [
+      'title^100',
+      'author^10',
+      'alt_title',
+      'sub_title',
+      'alt_sub_title',
+      'ordinal_1',
+      'ordinal_2',
+      'ordinal_3',
+      'chronological_1',
+      'chronological_2',
+      'chronological_3',
+    ]
     
     facet_queries = []
     facets.each do |facet|
@@ -38,7 +59,7 @@ class SearchEngine
     solr.get('select', params: {
       "defType" => "edismax",
       q: query,
-      qf: "title^100 author^10 alt_title sub_title alt_sub_title",
+      qf: query_fields.join(" "),
       hl: true,
       "hl.fl" => "*",
       "hl.snippets" => highlight_maxcount,

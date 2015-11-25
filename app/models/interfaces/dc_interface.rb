@@ -4,6 +4,9 @@ class DcInterface
     @doc = Nokogiri::XML(xml)
   end
 
+  def set_ordinals_chronologicals(hash)
+  end
+
   def source
     return "dc"
   end

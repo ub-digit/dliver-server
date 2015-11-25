@@ -8,6 +8,9 @@ class GubsInterface
     @doc = Nokogiri::XML(xml)
   end
 
+  def set_ordinals_chronologicals(hash)
+  end
+
   def source
     source_ref = @doc.xpath("//gubs/manuscript/@hd-ref").text
     return "document" if source_ref == "dokument"
