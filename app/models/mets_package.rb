@@ -118,6 +118,10 @@ class MetsPackage < ActiveRecord::Base
   # Returns file number of thumbnail file depending on metadata
   def thumbnail_file
     # Find the first TitlePage if one exists
+    if metadata_hash["image_metadata"].nil?
+      return nil
+    end
+
     image_obj = metadata_hash["image_metadata"].select {|x| x["logical"] == "TitlePage"}.first
 
     # If none exists, find the first image that is not a ColorTarget
