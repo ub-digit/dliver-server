@@ -90,15 +90,16 @@ class MetsPackage < ActiveRecord::Base
 
   # Generates thumbnails and stores them in cache folder
   def generate_thumbnails
+    return if Rails.env == 'test'
     # Get file group from config
     thumbnail_file_group = APP_CONFIG['thumbnail_file_group']
     if !thumbnail_file_group
-      raise StandardError "Missing config thumbnail_file_group"
+      raise StandardError, "Missing config thumbnail_file_group"
     end
 
     source_file_group = metadata_hash['file_groups'].select {|x| x['name'] == thumbnail_file_group}.first
     if !source_file_group
-      raise StandardError "Generate thumbnails: No such file group: #{thumbnail_file_group}"
+      raise StandardError, "Generate thumbnails: No such file group: #{thumbnail_file_group}"
     end
 
     # Create thumbnail structure
