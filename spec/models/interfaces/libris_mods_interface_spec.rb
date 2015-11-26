@@ -6,6 +6,11 @@ RSpec.describe LibrisModsInterface, type: :model do
   describe "generic libris package" do
     before :each do
       mets_package = create(:libris_package)
+      mets_package_nonsort = create(:libris_nonsort_package)
+      
+      @libris_mets_nonsort_interface = mets_package_nonsort.mets_object
+      @libris_mods_nonsort_interface = @libris_mets_nonsort_interface.wrapped_object
+
       @libris_mets_interface = mets_package.mets_object
       @libris_mods_interface = @libris_mets_interface.wrapped_object
     end
@@ -25,6 +30,12 @@ RSpec.describe LibrisModsInterface, type: :model do
         
         expect(title).to be_a String
         expect(title).to eq "Podsol och brunjord"
+      end
+      it "should return correct title string (with nonsort)" do
+        title = @libris_mods_nonsort_interface.title
+        
+        expect(title).to be_a String
+        expect(title).to eq "Den Podsol och brunjord"
       end
     end
 

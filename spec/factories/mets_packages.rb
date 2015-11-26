@@ -5,6 +5,10 @@ FactoryGirl.define do
       xml File.new("#{Rails.root}/spec/fixtures/102377_libris_mets.xml").read
     end
 
+    trait :libris_nonsort_xml do
+      xml File.new("#{Rails.root}/spec/fixtures/102377_libris_mets_w_nonsort.xml").read
+    end
+
     trait :document_xml do
       xml File.new("#{Rails.root}/spec/fixtures/102421_document_mets.xml").read
     end
@@ -23,6 +27,7 @@ FactoryGirl.define do
 
     factory :mets_package_empty, traits: [:empty_xml]
     factory :libris_package, traits: [:libris_xml]
+    factory :libris_nonsort_package, traits: [:libris_nonsort_xml]
     factory :document_package, traits: [:document_xml]
     factory :letter_package, traits: [:letter_xml]
     factory :dc_package, traits: [:dc_xml]
