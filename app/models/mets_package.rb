@@ -18,6 +18,7 @@ class MetsPackage < ActiveRecord::Base
       generate_copyright
       generate_metadata
       generate_xmlhash
+      generate_thumbnails
     end
   end
 
@@ -79,11 +80,56 @@ class MetsPackage < ActiveRecord::Base
     hash[:creator_agent] = mets_object.creator_agent
     hash[:archivist_agent] = mets_object.archivist_agent
     hash[:file_groups] = mets_object.file_groups
+    hash[:image_metadata] = mets_object.image_metadata
     hash[:language] = mets_object.language
     hash[:catalog_id] = mets_object.wrapped_object.id
     hash[:source] = mets_object.wrapped_object.source
     mets_object.wrapped_object.set_ordinals_chronologicals(hash)
     self.metadata = hash.to_json
+  end
+
+  # Generates thumbnails and stores them in cache folder
+  def generate_thumbnails
+    return if Rails.env == 'test'
+    # Get file group from config
+    thumbnail_file_group = APP_CONFIG['thumbnail_file_group']
+    if !thumbnail_file_group
+      raise StandardError, "Missing config thumbnail_file_group"
+    end
+
+    source_file_group = metadata_hash['file_groups'].select {|x| x['name'] == thumbnail_file_group}.first
+    if !source_file_group
+      raise StandardError, "Generate thumbnails: No such file group: #{thumbnail_file_group}"
+    end
+
+    # Create thumbnail structure
+    FileUtils.mkdir_p(APP_CONFIG['cache_path'] + '/' + self.name + '/thumbnails/')
+
+    # Generate thumbnails for all files in group
+    source_file_group['files'].each do |file|
+      source_file = Pathname.new(APP_CONFIG['store_path'] + '/' + self.name + '/' + file['location'])
+      destination_file = Pathname.new(APP_CONFIG['cache_path'] + '/' + self.name + '/thumbnails/' + source_file.basename('.*').to_s + '.jpg')
+
+      FileAdapter.create_thumbnail(source_file: source_file.to_s, destination_file: destination_file.to_s)
+    end
+
+  end
+
+  # Returns file number of thumbnail file depending on metadata
+  def thumbnail_file
+    # Find the first TitlePage if one exists
+    image_obj = metadata_hash["image_metadata"].select {|x| x["logical"] == "TitlePage"}.first
+
+    # If none exists, find the first image that is not a ColorTarget
+    if image_obj.nil?
+      image_obj = metadata_hash["image_metadata"].select {|x| x["physical"] != "ColorTarget"}.first
+    end
+
+    if image_obj
+      return image_obj['id']
+    else
+      return nil
+    end
   end
 
   def metadata_hash
@@ -124,7 +170,8 @@ class MetsPackage < ActiveRecord::Base
       source: mets_object.source,
       page_count: mets_object.page_count,
       publisher: mets_object.publisher,
-      file_groups: mets_object.file_groups
+      file_groups: mets_object.file_groups,
+      image_metadata: mets_object.image_metadata
     })
   end
 

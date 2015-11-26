@@ -92,4 +92,21 @@ class V1::MetsPackagesController < ApplicationController
 
     render_json
   end
+
+  def thumbnail
+    package = MetsPackage.find_by_name(params[:package_name])
+
+    thumbnail_file_name = sprintf("%04d", package.thumbnail_file)
+
+    # Find thumbnail in cache structure
+    thumbnail_path = Pathname.new("#{APP_CONFIG['cache_path']}/#{package.name}/thumbnails/#{thumbnail_file_name}.jpg")
+    # If thumbnail doesn't exist, use default thumbnail
+    if !thumbnail_path.exist? || !thumbnail_path.file?
+      thumbnail_path = Pathname.new(APP_CONFIG['default_thumbnail'])
+    end
+    
+    file = File.open(thumbnail_path.to_s)
+    @response = {ok: "success"}
+    send_data file.read, filename: package.name + "_thumbnail.jpg", disposition: "inline"
+  end
 end

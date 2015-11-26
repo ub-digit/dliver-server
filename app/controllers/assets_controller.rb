@@ -26,4 +26,5 @@ class AssetsController < ApplicationController
       send_data file.read, filename: file_data[:name], disposition: "inline"
     end
   end
+
 end
