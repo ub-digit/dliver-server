@@ -96,7 +96,7 @@ class V1::MetsPackagesController < ApplicationController
   def thumbnail
     package = MetsPackage.find_by_name(params[:package_name])
 
-    thumbnail_file_name = sprintf("%04d", package.thumbnail_file)
+    thumbnail_file_name = sprintf("%04d", package.thumbnail_file || 0)
 
     # Find thumbnail in cache structure
     thumbnail_path = Pathname.new("#{APP_CONFIG['cache_path']}/#{package.name}/thumbnails/#{thumbnail_file_name}.jpg")
