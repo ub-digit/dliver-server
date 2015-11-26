@@ -1,3 +1,4 @@
+require 'pp'
 class MetsPackage < ActiveRecord::Base
   validates_presence_of :search_string
 
@@ -16,6 +17,7 @@ class MetsPackage < ActiveRecord::Base
       generate_search_string
       generate_copyright
       generate_metadata
+      generate_xmlhash
     end
   end
 
@@ -32,6 +34,11 @@ class MetsPackage < ActiveRecord::Base
   # Sets sub_title from xml
   def generate_sub_title
     self.sub_title = mets_object.sub_title
+  end
+
+  # Sets hash of METS-XML
+  def generate_xmlhash
+    self.xmlhash = Digest::SHA256.hexdigest(self.xml)
   end
 
   # Sets author from xml
@@ -193,7 +200,7 @@ class MetsPackage < ActiveRecord::Base
     file_hashes = files.map { |x| x[:xmlhash]}
     to_remove = []
     MetsPackage.all.each do |package|
-      if !file_hashes.include?(package.xmlhash)
+      if !file_hashes.include?(package.xmlhash) || ENV['FORCE_RESYNC'] == "YES"
         to_remove << package
       end
     end
