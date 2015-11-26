@@ -100,6 +100,20 @@ class MetsInterface
     @file_groups
   end
 
+  # Returns metadata per file
+  def image_metadata
+    return @image_metadata unless @image_metadata.nil?
+    count = page_count
+    array = []
+    (1..page_count).each do |page|
+      logical_value = @doc.xpath("//mets:structMap[@TYPE='Logical']/mets:div/mets:div[@ORDER='#{page}']").first.attr("TYPE")
+      physical_value = @doc.xpath("//mets:structMap[@TYPE='Physical']/mets:div/mets:div[@ORDER='#{page}']").first.attr("TYPE")
+      array << {id: page, physical: physical_value, logical: logical_value}
+    end
+    @image_metadata = array
+    @image_metadata
+  end
+
   def wrapped_object
     mdwrap = @doc.xpath("//mets:dmdSec[@ID='dmdSec1']/mets:mdWrap")
     return nil if !mdwrap

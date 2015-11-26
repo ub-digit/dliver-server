@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
     # Mets Package API
     resources :mets_packages, param: :package_name
+    get 'mets_packages/:package_name/thumbnail', to: 'mets_packages#thumbnail'
 
     # User API
     resources :users
