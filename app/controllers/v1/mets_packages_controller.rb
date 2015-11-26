@@ -1,3 +1,8 @@
+class String
+  def naturalized
+    scan(/[^\d\.]+|[\d\.]+/).collect { |f| f.match(/\d+(\.\d+)?/) ? f.to_f : f }
+  end
+end
 class V1::MetsPackagesController < ApplicationController
 
   before_filter :validate_access
@@ -32,7 +37,20 @@ class V1::MetsPackagesController < ApplicationController
     meta[:facet_counts][:facet_fields] = {}
     
     result['facet_counts']['facet_fields'].each do |field, facets|
-      meta[:facet_counts][:facet_fields][field.to_sym] = facets.each_slice(2).to_a.map{|x| {label: x[0], count: x[1]}} # Create hash structure from facet count array
+      unsortedArray = facets.each_slice(2).to_a.map{|x| {label: x[0], count: x[1]}} # unsorted array
+      puts "#  unsorted --- #{field} ----------------- #" 
+      puts unsortedArray 
+      puts "# ---------------------------------------- #" 
+      sortedArray = unsortedArray
+      if (field =~ /ordinal.*/)
+          sortedArray = unsortedArray.sort_by { |a| [a[:label].naturalized, a[:count]]}
+      else
+          sortedArray = unsortedArray.sort_by { |a| [-a[:count], a[:label]]}
+      end
+      puts "#    sorted ------------------------------ #" 
+      puts sortedArray 
+      puts "# ---------------------------------------- #" 
+      meta[:facet_counts][:facet_fields][field.to_sym] = sortedArray
     end
 
     # Loop all docs and inject extra information
