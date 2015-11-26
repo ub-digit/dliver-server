@@ -100,9 +100,12 @@ class V1::MetsPackagesController < ApplicationController
 
     # Find thumbnail in cache structure
     thumbnail_path = Pathname.new("#{APP_CONFIG['cache_path']}/#{package.name}/thumbnails/#{thumbnail_file_name}.jpg")
-    # If thumbnail doesn't exist, use default thumbnail
+    # If thumbnail doesn't exist, generate or use default
     if !thumbnail_path.exist? || !thumbnail_path.file?
-      thumbnail_path = Pathname.new(APP_CONFIG['default_thumbnail'])
+      package.generate_thumbnails(page: thumbnail_file_name) # Generate thumbnail file 
+      if !thumbnail_path.exist? || !thumbnail_path.file?
+        thumbnail_path = Pathname.new(APP_CONFIG['default_thumbnail'])
+      end
     end
     
     file = File.open(thumbnail_path.to_s)
