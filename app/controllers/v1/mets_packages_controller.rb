@@ -38,18 +38,17 @@ class V1::MetsPackagesController < ApplicationController
     
     result['facet_counts']['facet_fields'].each do |field, facets|
       unsortedArray = facets.each_slice(2).to_a.map{|x| {label: x[0], count: x[1]}} # unsorted array
-      puts "#  unsorted --- #{field} ----------------- #" 
-      puts unsortedArray 
-      puts "# ---------------------------------------- #" 
-      sortedArray = unsortedArray
+      #puts "#  unsorted --- #{field} ----------------- #" 
+      #puts unsortedArray 
+      #puts "# ---------------------------------------- #" 
       if (field =~ /ordinal.*/)
           sortedArray = unsortedArray.sort_by { |a| [a[:label].naturalized, a[:count]]}
       else
           sortedArray = unsortedArray.sort_by { |a| [-a[:count], a[:label]]}
       end
-      puts "#    sorted ------------------------------ #" 
-      puts sortedArray 
-      puts "# ---------------------------------------- #" 
+      #puts "#    sorted ------------------------------ #" 
+      #puts sortedArray 
+      #puts "# ---------------------------------------- #" 
       meta[:facet_counts][:facet_fields][field.to_sym] = sortedArray
     end
 
