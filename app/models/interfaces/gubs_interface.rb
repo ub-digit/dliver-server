@@ -36,16 +36,17 @@ class GubsInterface
       family = @doc.xpath("//gubs/manuscript/document/originator/name-family").text
       given = @doc.xpath("//gubs/manuscript/document/originator/name-given").text
       date = @doc.xpath("//gubs/manuscript/document/originator/name-date").text
-      return [given, family, date]
+      return [[given, family, date]]
     end
     if source == "letter"
-      return sender
+      return [sender]
     end
   end
 
   def authors
-    author_entry = author
-    return "#{author_entry[0]} #{author_entry[1]} (#{author_entry[2]})"
+    author.map do |author_entry| 
+      "#{author_entry[0]} #{author_entry[1]} (#{author_entry[2]})"
+    end.join("; ")
   end
 
   def publisher
