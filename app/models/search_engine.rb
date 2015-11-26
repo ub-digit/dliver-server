@@ -29,6 +29,7 @@ class SearchEngine
   def self.query(query, facets: [])
     highlight_maxcount = 10
     facet_fields = [
+      'title_facet',
       'author_facet',
       'type_of_record',
       'copyrighted',
@@ -67,7 +68,10 @@ class SearchEngine
       "facet.field" => facet_fields,
       "facet.mincount" => 1,
       fl: "score,*",
-      fq: facet_queries
+      fq: facet_queries,
+      "hl.simple.pre" => "<strong>",
+      "hl.simple.post" => "</strong>",
+      rows: 50
     })
   end
 end
