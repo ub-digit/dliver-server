@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <schema name="dliver" version="1.5">
-  <field name="_version_" type="long" indexed="true" stored="true"/>
   <field name="_root_" type="text_general" indexed="true" stored="false"/>
-  <field name="id" type="text_general" indexed="true" stored="true" required="true" multiValued="false" />
-  <field name="catalog_id" type="text_general" indexed="true" stored="true" />
-  <field name="name" type="text_general" indexed="true" stored="true"/>
-  <field name="title" type="text_general" indexed="true" stored="true"/>
-  <field name="sub_title" type="text_general" indexed="true" stored="true"/>
-  <field name="alt_title" type="text_general" indexed="true" stored="true" multiValued="true"/>
+  <field name="_version_" type="long" indexed="true" stored="true"/>
   <field name="alt_sub_title" type="text_general" indexed="true" stored="true" multiValued="true"/>
+  <field name="alt_title" type="text_general" indexed="true" stored="true" multiValued="true"/>
   <field name="author" type="text_general" indexed="true" stored="true" multiValued="true"/>
   <field name="author_facet" type="string" indexed="true" stored="false" multiValued="true"/>
   <field name="authors" type="text_general" indexed="false" stored="true"/>
-  <field name="year" type="year" indexed="true" stored="true" multiValued="true"/>
-  <field name="copyrighted" type="boolean" indexed="true" stored="true"/>
-  <field name="type_of_record" type="string" indexed="true" stored="true" multiValued="true"/>
-  <field name="language" type="text_general" indexed="true" stored="true"/>
-  <field name="source" type="text_general" indexed="true" stored="true"/>
-  <field name="publisher" type="text_general" indexed="true" stored="true"/>
-  <field name="page_count" type="int" indexed="true" stored="true"/>
-  <field name="ordinal_1" type="text_general" indexed="true" stored="true"/>
-  <field name="ordinal_2" type="text_general" indexed="true" stored="true"/>
-  <field name="ordinal_3" type="text_general" indexed="true" stored="true"/>
+  <field name="catalog_id" type="text_general" indexed="true" stored="true" />
   <field name="chronological_1" type="text_general" indexed="true" stored="true"/>
-  <field name="chronological_2" type="text_general" indexed="true" stored="true"/>
-  <field name="chronological_3" type="text_general" indexed="true" stored="true"/>
-  <field name="ordinal_1_facet" type="string" indexed="true" stored="false"/>
-  <field name="ordinal_2_facet" type="string" indexed="true" stored="false"/>
-  <field name="ordinal_3_facet" type="string" indexed="true" stored="false"/>
   <field name="chronological_1_facet" type="string" indexed="true" stored="false"/>
+  <field name="chronological_2" type="text_general" indexed="true" stored="true"/>
   <field name="chronological_2_facet" type="string" indexed="true" stored="false"/>
+  <field name="chronological_3" type="text_general" indexed="true" stored="true"/>
   <field name="chronological_3_facet" type="string" indexed="true" stored="false"/>
+  <field name="copyrighted" type="boolean" indexed="true" stored="true"/>
   <field name="fulltext" type="text_general" indexed="true" stored="false"/>
+  <field name="id" type="text_general" indexed="true" stored="true" required="true" multiValued="false" />
+  <field name="language" type="text_general" indexed="true" stored="true"/>
+  <field name="name" type="text_general" indexed="true" stored="true"/>
+  <field name="ordinal_1" type="text_general" indexed="true" stored="true"/>
+  <field name="ordinal_1_facet" type="string" indexed="true" stored="false"/>
+  <field name="ordinal_2" type="text_general" indexed="true" stored="true"/>
+  <field name="ordinal_2_facet" type="string" indexed="true" stored="false"/>
+  <field name="ordinal_3" type="text_general" indexed="true" stored="true"/>
+  <field name="ordinal_3_facet" type="string" indexed="true" stored="false"/>
+  <field name="page_count" type="int" indexed="true" stored="true"/>
+  <field name="publisher" type="text_general" indexed="true" stored="true"/>
+  <field name="pubyear" type="string" indexed="true" stored="true"/>
+  <field name="source" type="text_general" indexed="true" stored="true"/>
+  <field name="sub_title" type="text_general" indexed="true" stored="true"/>
+  <field name="title" type="text_general" indexed="true" stored="true"/>
+  <field name="type_of_record" type="string" indexed="true" stored="true" multiValued="true"/>
+  <field name="year" type="year" indexed="true" stored="true" multiValued="true"/>
 
   <copyField source="author" dest="author_facet"/>
   <copyField source="ordinal_1" dest="ordinal_1_facet"/>
