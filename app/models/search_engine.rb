@@ -50,6 +50,7 @@ class SearchEngine
       'chronological_1',
       'chronological_2',
       'chronological_3',
+      'year'
     ]
     
     facet_queries = []
