@@ -69,8 +69,8 @@ class SearchEngine
       "facet.mincount" => 1,
       fl: "score,*",
       fq: facet_queries,
-      "hl.simple.pre" => "<strong>",
-      "hl.simple.post" => "</strong>",
+      "hl.simple.pre" => "<span class='highlighted-text'>",
+      "hl.simple.post" => "</span>",
       rows: 50
     })
   end
