@@ -12,6 +12,8 @@ class V1::MetsPackagesController < ApplicationController
   	query = params[:query]
     facet_queries = params[:facet_queries] || []
 
+    query = nil if params[:query].blank?
+
     # If queries are given on an object array format, translate to Array
     if facet_queries.is_a? Hash
       new_array = []
@@ -29,6 +31,9 @@ class V1::MetsPackagesController < ApplicationController
     meta = {}
     meta[:query] = {}
     meta[:query][:query] = result['responseHeader']['params']['q'] # Query string
+    if result['responseHeader']['params']['q'].blank?
+      meta[:query][:query] = result['responseHeader']['params']['q.alt'] # Query string
+    end
     meta[:query][:total] = result['response']['numFound'] # Total results
     meta[:query][:facet_fields] = [*result['responseHeader']['params']['facet.field']] # Always return an array of given facet fields
     meta[:query][:facet_queries] = [*result['responseHeader']['params']['fq']]

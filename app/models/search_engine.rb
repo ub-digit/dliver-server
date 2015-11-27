@@ -72,7 +72,9 @@ class SearchEngine
       fq: facet_queries,
       "hl.simple.pre" => "<span class='highlighted-text'>",
       "hl.simple.post" => "</span>",
-      rows: 20
-    })
+      rows: 20,
+      "q.alt" => '*',
+      sort: "score desc, name asc"
+    }.compact)
   end
 end
