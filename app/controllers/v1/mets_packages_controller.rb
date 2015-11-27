@@ -105,11 +105,13 @@ class V1::MetsPackagesController < ApplicationController
       thumbnail_file_name = sprintf("%04d", package.thumbnail_file || 0)
     end
 
+    format = params[:width] || "70"
+
     # Find thumbnail in cache structure
-    thumbnail_path = Pathname.new("#{APP_CONFIG['cache_path']}/#{package.name}/thumbnails/#{thumbnail_file_name}.jpg")
+    thumbnail_path = Pathname.new("#{APP_CONFIG['cache_path']}/#{package.name}/thumbnails/#{format}/#{thumbnail_file_name}.jpg")
     # If thumbnail doesn't exist, generate or use default
     if !thumbnail_path.exist? || !thumbnail_path.file?
-      package.generate_thumbnails(page: thumbnail_file_name) # Generate thumbnail file 
+      package.generate_thumbnails(page: thumbnail_file_name, format: format) # Generate thumbnail file 
       if !thumbnail_path.exist? || !thumbnail_path.file?
         thumbnail_path = Pathname.new(APP_CONFIG['default_thumbnail'])
       end

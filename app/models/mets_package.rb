@@ -88,7 +88,7 @@ class MetsPackage < ActiveRecord::Base
   end
 
   # Generates thumbnails and stores them in cache folder
-  def generate_thumbnails(page: nil)
+  def generate_thumbnails(page: nil, format: 70)
     return if Rails.env == 'test'
     # Get file group from config
     thumbnail_file_group = APP_CONFIG['thumbnail_file_group']
@@ -102,22 +102,23 @@ class MetsPackage < ActiveRecord::Base
     end
 
     # Create thumbnail structure
-    FileUtils.mkdir_p(APP_CONFIG['cache_path'] + '/' + self.name + '/thumbnails/')
+    destination_path = "#{APP_CONFIG['cache_path']}/#{self.name}/thumbnails/#{format}/"
+    FileUtils.mkdir_p(destination_path)
 
     # If specific page is given, only create thumbnail for it
     if page
       source_file = Pathname.new(APP_CONFIG['store_path'] + '/' + self.name + '/' + thumbnail_file_group + '/' + page + '.jpg') # Change jpg to dynamic value depending on group
-      destination_file = Pathname.new(APP_CONFIG['cache_path'] + '/' + self.name + '/thumbnails/' + source_file.basename('.*').to_s + '.jpg')
+      destination_file = Pathname.new(destination_path + source_file.basename('.*').to_s + '.jpg')
       if !destination_file.exist?
-        FileAdapter.create_thumbnail(source_file: source_file.to_s, destination_file: destination_file.to_s)
+        FileAdapter.create_thumbnail(source_file: source_file.to_s, destination_file: destination_file.to_s, format: format)
       end
     else
       # Generate thumbnails for all files in group
       source_file_group['files'].each do |file|
         source_file = Pathname.new(APP_CONFIG['store_path'] + '/' + self.name + '/' + file['location'])
-        destination_file = Pathname.new(APP_CONFIG['cache_path'] + '/' + self.name + '/thumbnails/' + source_file.basename('.*').to_s + '.jpg')
+        destination_file = Pathname.new(destination_path + source_file.basename('.*').to_s + '.jpg')
         if !destination_file.exist?
-          FileAdapter.create_thumbnail(source_file: source_file.to_s, destination_file: destination_file.to_s)
+          FileAdapter.create_thumbnail(source_file: source_file.to_s, destination_file: destination_file.to_s, format: format)
         end
       end
     end
@@ -143,6 +144,11 @@ class MetsPackage < ActiveRecord::Base
     else
       return nil
     end
+  end
+
+  # Returns a link to thumbnail for job
+  def thumbnail_link
+
   end
 
   def metadata_hash
