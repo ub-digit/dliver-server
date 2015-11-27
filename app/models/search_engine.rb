@@ -72,7 +72,7 @@ class SearchEngine
       fq: facet_queries,
       "hl.simple.pre" => "<span class='highlighted-text'>",
       "hl.simple.post" => "</span>",
-      rows: 50
+      rows: 20
     })
   end
 end
