@@ -49,6 +49,9 @@ class V1::MetsPackagesController < ApplicationController
       #puts "#    sorted ------------------------------ #" 
       #puts sortedArray 
       #puts "# ---------------------------------------- #" 
+
+      # Remove empty label facet values
+      sortedArray = sortedArray.select {|x| x[:label].present?}
       meta[:facet_counts][:facet_fields][field.to_sym] = sortedArray
     end
 
