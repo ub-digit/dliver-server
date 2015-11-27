@@ -74,7 +74,7 @@ class SearchEngine
       "hl.simple.post" => "</span>",
       rows: 20,
       "q.alt" => '*',
-      sort: "score desc, name asc"
+      sort: "score desc, name desc"
     }.compact)
   end
 end
