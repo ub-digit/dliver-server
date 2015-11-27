@@ -100,11 +100,11 @@ class V1::MetsPackagesController < ApplicationController
     package = MetsPackage.find_by_name(params[:package_name])
     if !package
       error_msg(ErrorCodes::OBJECT_ERROR, "Could not find package with name #{params[:package_name]}")
-      thumbnail_file_name = "default"
-    else
-      thumbnail_file_name = sprintf("%04d", package.thumbnail_file || 0)
+      render_json
+      return
     end
 
+    thumbnail_file_name = sprintf("%04d", package.thumbnail_file || 0)
     format = params[:width] || "70"
 
     # Find thumbnail in cache structure
