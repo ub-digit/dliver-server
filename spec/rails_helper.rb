@@ -52,7 +52,10 @@ RSpec.configure do |config|
     global_stubs # Load stubs
 
     # Delete packages
-    FileUtils.remove_dir("#{Rails.root}/tmp/test_store")
+    test_store_path = Pathname.new("#{Rails.root}/tmp/test_store")
+    if test_store_path.exist?
+      FileUtils.remove_dir(test_store_path.to_s)
+    end
 
     # Create store folder and copy test packages
     FileUtils.mkdir_p("#{Rails.root}/tmp/test_store")
