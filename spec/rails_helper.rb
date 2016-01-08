@@ -49,7 +49,14 @@ RSpec.configure do |config|
   config.include Requests::JsonHelpers
   config.include Requests::StubRequests
   config.before(:each) do
-    global_stubs
+    global_stubs # Load stubs
+
+    # Delete packages
+    FileUtils.remove_dir("#{Rails.root}/tmp/test_store")
+
+    # Create store folder and copy test packages
+    FileUtils.mkdir_p("#{Rails.root}/tmp/test_store")
+    FileUtils.cp_r(Pathname.new("#{Rails.root}/spec/fixtures/test-packages/").children, "#{Rails.root}/tmp/test_store/")
   end
 
   config.before(:suite) do
@@ -62,4 +69,5 @@ RSpec.configure do |config|
       example.run
     end
   end
+
 end

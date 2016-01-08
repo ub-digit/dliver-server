@@ -42,18 +42,13 @@ class V1::MetsPackagesController < ApplicationController
     meta[:facet_counts][:facet_fields] = {}
     
     result['facet_counts']['facet_fields'].each do |field, facets|
+
       unsortedArray = facets.each_slice(2).to_a.map{|x| {label: x[0], count: x[1]}} # unsorted array
-      #puts "#  unsorted --- #{field} ----------------- #" 
-      #puts unsortedArray 
-      #puts "# ---------------------------------------- #" 
       if (field =~ /ordinal.*/)
           sortedArray = unsortedArray.sort_by { |a| [a[:label].naturalized, a[:count]]}
       else
           sortedArray = unsortedArray.sort_by { |a| [-a[:count], a[:label]]}
       end
-      #puts "#    sorted ------------------------------ #" 
-      #puts sortedArray 
-      #puts "# ---------------------------------------- #" 
 
       # Remove empty label facet values
       sortedArray = sortedArray.select {|x| x[:label].present?}
@@ -98,6 +93,37 @@ class V1::MetsPackagesController < ApplicationController
       error_msg(ErrorCodes::OBJECT_ERROR, "Could not find package with name #{params[:package_name]}")
     end
 
+    render_json
+  end
+
+  def update
+    package = MetsPackage.find_by_name(params[:package_name])
+    xml = File.open(package.xml_file).read
+    interface = MetsInterface.new(xml)
+
+    # Update copyright if given
+    if params[:update_fields] && params[:update_fields][:copyright_status]
+      interface.copyright_status = params[:update_fields][:copyright_status]
+    end
+    
+    # Check if xml is updated
+    if xml == interface.xml
+      return
+    end
+
+    # Move old xml file
+    package.archive_xml_file
+
+    # Write new xml file
+    if !File.write(package.xml_file, interface.xml)
+      error_msg(ErrorCodes::OBJECT_ERROR, "Could not write package xml #{package.name}")
+    end
+    
+    # Sync package
+    MetsPackage.sync(package_id: package.name)
+    package = MetsPackage.find_by_name(package.name)
+
+    @response[:mets_package] = package
     render_json
   end
 

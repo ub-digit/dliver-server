@@ -140,4 +140,27 @@ RSpec.describe V1::MetsPackagesController, type: :controller do
       end
     end
   end
+  
+  describe "update" do
+    before :each do
+      puts APP_CONFIG['store_path']
+    end
+    context "copyright for an existing package" do
+      it "should return an updated xml" do
+        # Find copyrighted package
+        MetsPackage.sync
+        copyrighted_package = MetsPackage.find_by_name("GUB0109443")
+        expect(copyrighted_package.mets_object.copyright_status).to eq "copyrighted"
+
+        # Set package copyright to false
+        put :update, package_name: "GUB0109443", update_fields: {copyright_status: "pd"}
+        
+        expect(json['mets_package']['copyright_status']).to eq "pd"
+        copyrighted_package = MetsPackage.find_by_name(copyrighted_package.name)
+
+        expect(copyrighted_package.mets_object.copyright_status).to eq "pd"
+
+      end
+    end
+  end
 end

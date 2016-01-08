@@ -146,4 +146,13 @@ RSpec.describe MetsInterface, type: :model do
       end
     end
   end
+
+  describe "update_copyright" do
+    context "setting copyright to 'copyrighted'" do
+      it "should update copyright flag" do
+        @libris_mets_interface.copyright_status = 'pd'
+        expect(@libris_mets_interface.copyright_status).to eq("pd")
+      end
+    end
+  end
 end

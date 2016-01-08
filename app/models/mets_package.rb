@@ -146,11 +146,6 @@ class MetsPackage < ActiveRecord::Base
     end
   end
 
-  # Returns a link to thumbnail for job
-  def thumbnail_link
-
-  end
-
   def metadata_hash
     @metadata_hash ||= JSON.parse(self.metadata)
   end
@@ -176,6 +171,26 @@ class MetsPackage < ActiveRecord::Base
     @mets_object ||= MetsInterface.new(xml)
   end
 
+  def xml_file
+    return MetsPackage.xml_file(package_id: self.name)
+  end
+
+  # Archives current xml file in history folder
+  def archive_xml_file
+    timestamp = Time.now.strftime('%Y_%m_%d_%H_%M')
+    FileUtils.mkdir_p(archive_path)
+    FileUtils.mv(self.xml_file, "#{archive_path}/#{timestamp}_mets.xml")
+  end
+
+  def archive_path
+    return "#{APP_CONFIG['store_path']}/#{mets_object.id}/history"
+  end
+
+  # Returns the path to source mets xml file for a given package id
+  def self.xml_file(package_id:)
+    return "#{APP_CONFIG['store_path']}/#{package_id}/#{package_id}_mets.xml"
+  end
+
   def as_json(opts={})
     return super(except: [:xml, :metadata]).merge({
       package_id: mets_object.id,
@@ -195,9 +210,9 @@ class MetsPackage < ActiveRecord::Base
   end
 
   # Sync (import new, delete removed, update existing) from filesystem
-  def self.sync
+  def self.sync(package_id: nil)
     search_engine = SearchEngine.new
-    files = files_in_store
+    files = files_in_store(package_id: package_id)
 #    search_engine.clear(confirm: true)
     remove_packages_to_update(files)
 
@@ -224,9 +239,14 @@ class MetsPackage < ActiveRecord::Base
   end
 
   # Return array of files data from all mets xml files in the path structure
-  def self.files_in_store
+  def self.files_in_store(package_id: nil)
     path = APP_CONFIG["store_path"]
-    Dir.glob("#{path}/*/*.xml").map do |filename| 
+    if package_id
+      files = MetsPackage.xml_file(package_id: package_id)
+    else
+      files = "#{path}/*/*.xml"
+    end
+    Dir.glob(files).map do |filename| 
       xmldata = File.read(filename)
       hashvalue = Digest::SHA256.hexdigest(xmldata)
       mets_object = MetsInterface.new(xmldata)

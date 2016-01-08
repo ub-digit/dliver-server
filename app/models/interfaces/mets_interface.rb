@@ -1,7 +1,12 @@
 class MetsInterface
+  attr_reader :doc
 
   def initialize(xml)
     @doc = Nokogiri::XML(xml)
+  end
+
+  def xml
+    @doc.to_xml
   end
 
   # Returns the ID of mets document
@@ -66,9 +71,28 @@ class MetsInterface
     @archivist_agent ||= agents.select{|x| x[:role] == 'ARCHIVIST'}.first
   end
 
+
+  VALID_COPYRIGHT_VALUES = ['pd', 'copyrighted']
   # Returns copyright status
   def copyright_status
     @copyright_status ||= @doc.xpath('//mets:amdSec/mets:rightsMD/mets:mdWrap/mets:xmlData/copyright').attr('copyright.status').to_s
+  end
+  
+  # Updates copyright status
+  def copyright_status=(copyright)
+    value = copyright.downcase
+    if !VALID_COPYRIGHT_VALUES.include? value
+      raise StandardError, "#{value} is not a valid copyright value"
+      return
+    end
+
+    @doc.xpath('//mets:amdSec/mets:rightsMD/mets:mdWrap/mets:xmlData/copyright').attr('copyright.status').content = value
+    clear_cache
+  end
+
+  # Unsets instance variables, used to be able to update values to reflect current xml
+  def clear_cache
+    @copyright_status = nil
   end
 
   # Returns file groups
@@ -180,4 +204,5 @@ class MetsInterface
   def year
     wrapped_object.year
   end
+
 end

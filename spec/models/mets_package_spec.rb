@@ -116,4 +116,31 @@ RSpec.describe MetsPackage, type: :model do
       end
     end
   end
+
+  describe "xml_file" do
+    context "for an existing mets file" do
+      it "should return a path to the source xml file" do
+        package = create(:mets_package, name: "TestPackage")
+        
+        xml_path = package.xml_file
+        
+        expect(xml_path).to eq "#{APP_CONFIG['store_path']}/TestPackage/TestPackage_mets.xml"
+      end
+    end
+  end
+
+  describe "archive_xml_file" do
+    context "for an existing package" do
+      it "should move package xml file to history folder" do
+        MetsPackage.sync
+        package = MetsPackage.first
+        
+        package.archive_xml_file
+
+        expect(Pathname.new(package.xml_file).exist?).to be_falsey
+        expect(Pathname.new(package.archive_path).children.first).to_not be nil
+      end
+    end
+  end
+
 end
