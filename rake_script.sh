@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PATH=$PATH:/usr/local/bin
-. /usr/local/lib/rvm
+. /usr/local/rvm/scripts/rvm
 
 DIR=/apps/dliver-server/current
 cd $DIR
