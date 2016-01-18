@@ -111,14 +111,23 @@ class V1::MetsPackagesController < ApplicationController
       return
     end
 
-    # Move old xml file
-    package.archive_xml_file
+    # Unlock package to make it writeable
+    FileSystemInterface.unlock(params[:package_name])
 
-    # Write new xml file
-    if !File.write(package.xml_file, interface.xml)
-      error_msg(ErrorCodes::OBJECT_ERROR, "Could not write package xml #{package.name}")
+    begin
+      # Move old xml file
+      package.archive_xml_file
+
+      # Write new xml file
+      if !File.write(package.xml_file, interface.xml)
+        error_msg(ErrorCodes::OBJECT_ERROR, "Could not write package xml #{package.name}")
+      end
+
+    ensure
+      # Lock package to make it write-protected
+      FileSystemInterface.lock(params[:package_name])
     end
-    
+
     # Sync package
     MetsPackage.sync(package_id: package.name)
     package = MetsPackage.find_by_name(package.name)

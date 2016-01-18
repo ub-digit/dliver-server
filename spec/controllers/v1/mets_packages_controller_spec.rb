@@ -142,9 +142,6 @@ RSpec.describe V1::MetsPackagesController, type: :controller do
   end
   
   describe "update" do
-    before :each do
-      puts APP_CONFIG['store_path']
-    end
     context "copyright for an existing package" do
       it "should return an updated xml" do
         # Find copyrighted package
