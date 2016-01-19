@@ -1,0 +1,1 @@
+www-data ALL = NOPASSWD:SETENV: /apps/dliver-server/current/scripts/lock.sh, /apps/dliver-server/current/scripts/unlock.sh
