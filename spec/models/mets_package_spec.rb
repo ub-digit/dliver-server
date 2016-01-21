@@ -115,6 +115,17 @@ RSpec.describe MetsPackage, type: :model do
         expect(changed).to be_nil
       end
     end
+    
+    context "one item is re-synchronized" do
+      it "should keep other items in database" do
+        MetsPackage.sync
+        package = MetsPackage.first
+
+        MetsPackage.sync(package_id: package.name)
+
+        expect(MetsPackage.count).to eq @package_count
+      end
+    end
   end
 
   describe "xml_file" do

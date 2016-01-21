@@ -108,6 +108,8 @@ class V1::MetsPackagesController < ApplicationController
     
     # Check if xml is updated
     if xml == interface.xml
+      @response[:mets_package] = package
+      render_json
       return
     end
 
@@ -122,7 +124,10 @@ class V1::MetsPackagesController < ApplicationController
       if !File.write(package.xml_file, interface.xml)
         error_msg(ErrorCodes::OBJECT_ERROR, "Could not write package xml #{package.name}")
       end
-
+    rescue => e
+      error_msg(ErrorCodes::OBJECT_ERROR, "Error while handling files: #{e}")
+      render_json
+      return
     ensure
       # Lock package to make it write-protected
       FileSystemInterface.lock(params[:package_name])

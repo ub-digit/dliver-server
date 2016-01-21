@@ -214,13 +214,21 @@ class MetsPackage < ActiveRecord::Base
     search_engine = SearchEngine.new
     files = files_in_store(package_id: package_id)
 #    search_engine.clear(confirm: true)
-    remove_packages_to_update(files)
 
-    packages_to_delete(files).each do |package_name| 
-      package = MetsPackage.find_by_name(package_name)
-      numeric_package_name = package.name[/^GUB(\d+)$/, 1].to_i
-      search_engine.delete_from_index(package_id: numeric_package_name)
-      package.destroy
+
+    if package_id
+      # Remove package for given id
+      MetsPackage.find_by_name(package_id).destroy
+    else
+      # Delete entries which have been changed on file system
+      remove_packages_to_update(files)
+      # Delete db entries which are not present in file system
+      packages_to_delete(files).each do |package_name| 
+        package = MetsPackage.find_by_name(package_name)
+        numeric_package_name = package.name[/^GUB(\d+)$/, 1].to_i
+        search_engine.delete_from_index(package_id: numeric_package_name)
+        package.destroy
+      end
     end
 
     packages_to_add(files).each do |package_name| 
