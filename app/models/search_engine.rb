@@ -57,7 +57,7 @@ class SearchEngine
       next if facet['facet'] == "copyrighted"
       facet_queries << "#{facet['facet']}:\"#{facet['value']}\""
     end
-    facet_queries << "copyrighted:false"
+    facet_queries << "copyrighted:\"false\""
 
     solr.get('select', params: {
       "defType" => "edismax",
