@@ -32,7 +32,6 @@ class SearchEngine
       'title_facet',
       'author_facet',
       'type_of_record',
-      'copyrighted',
       'language',
       'ordinal_1_facet',
       'ordinal_2_facet',
@@ -55,8 +54,10 @@ class SearchEngine
     
     facet_queries = []
     facets.each do |facet|
+      next if facet['facet'] == "copyrighted"
       facet_queries << "#{facet['facet']}:\"#{facet['value']}\""
     end
+    facet_queries << "copyrighted:\"false\""
 
     solr.get('select', params: {
       "defType" => "edismax",
