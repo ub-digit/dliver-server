@@ -153,7 +153,7 @@ class MetsPackage < ActiveRecord::Base
   def find_file_by_file_id(file_id)
     metadata_hash["file_groups"].each do |file_group| 
       file_group["files"].each do |file| 
-        if file["id"] == file_id
+        if file["id"] == file_id || file["id"] == "#{file_id}.pdf"
           file_name = File.basename(file["location"])
           return {group: file_group["name"], name: file_name, location: file["location"]}
         end
