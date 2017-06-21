@@ -39,7 +39,7 @@ class LibrisModsInterface
   end
 
   def author
-    @doc.xpath("//mods/name").map do |name| 
+    @doc.xpath("//mods/name[./role/roleTerm != 'rpy' and ./role/roleTerm != 'pbd']").map do |name|
       family = name.xpath("namePart[@type='family']").text
       given = name.xpath("namePart[@type='given']").text
       date = name.xpath("namePart[@type='date']").text
@@ -48,7 +48,7 @@ class LibrisModsInterface
   end
 
   def authors
-    author.map do |author_entry| 
+    author.map do |author_entry|
       given, family, date = author_entry
       tmp = "#{given} #{family}"
       tmp += " (#{date})" if date
@@ -72,7 +72,7 @@ class LibrisModsInterface
 
   def type_of_record
     types = []
-    @doc.xpath("//mods/genre").each do |genre| 
+    @doc.xpath("//mods/genre").each do |genre|
       types << genre.text
     end
     types << @doc.xpath("//mods/typeOfResource").text
