@@ -53,6 +53,10 @@ class V1::MetsPackagesController < ApplicationController
     meta[:query][:facet_fields] = [*result['responseHeader']['params']['facet.field']] # Always return an array of given facet fields
     meta[:query][:facet_queries] = [*result['responseHeader']['params']['fq']]
 
+    # Hack: exclude copyrighted string from facet_queries
+    if meta[:query][:facet_queries].include?("copyrighted:\"false\"")
+      meta[:query][:facet_queries].delete("copyrighted:\"false\"")
+    end
     meta[:facet_counts] = {}
     meta[:facet_counts][:facet_fields] = {}
 
