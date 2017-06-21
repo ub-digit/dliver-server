@@ -12,11 +12,11 @@ class DcInterface
   end
 
   def id
-    @doc.xpath("//dc/dc:identifier").text
+    @doc.xpath("//simpledc/dc:identifier").text
   end
 
   def author
-    [@doc.xpath("//dc/dc:creator").text]
+    [@doc.xpath("//simpledc/dc:creator").text]
   end
 
   def authors
@@ -24,11 +24,11 @@ class DcInterface
   end
 
   def language
-    @doc.xpath("//dc/dc:language").text
+    @doc.xpath("//simpledc/dc:language").text
   end
 
   def type_of_record
-    @doc.xpath("//dc/dc:type").map(&:text)
+    @doc.xpath("//simpledc/dc:type").map(&:text)
   end
 
   def publisher
@@ -36,7 +36,7 @@ class DcInterface
   end
 
   def title
-    @doc.xpath("//dc/dc:title").text
+    @doc.xpath("//simpledc/dc:title").text
   end
 
   def sub_title
@@ -56,6 +56,6 @@ class DcInterface
   end
 
   def year
-    @doc.xpath("//dc/dc:date").text
+    @doc.xpath("//simpledc/dc:date").text
   end
 end
