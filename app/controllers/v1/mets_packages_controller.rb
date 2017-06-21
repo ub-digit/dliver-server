@@ -14,6 +14,9 @@ class V1::MetsPackagesController < ApplicationController
 
     query = nil if params[:query].blank?
 
+    page = (params[:page] || 1).to_i
+    rows = (params[:rows] || 20).to_i
+
     # If queries are given on an object array format, translate to Array
     if facet_queries.is_a? Hash
       new_array = []
@@ -24,23 +27,35 @@ class V1::MetsPackagesController < ApplicationController
     end
 
     # Perform SOLR search
-    result = SearchEngine.query(query, facets: facet_queries)
+    result = SearchEngine.query(query, facets: facet_queries, page: page, rows: rows)
     docs = result['response']['docs']
-    
+
     # Create meta object
     meta = {}
+
+    pagination = {}
+    total = result['response']['numFound'] # Total results
+    total_pages = (total.to_f / rows.to_f).ceil
+    pagination[:pages] = total_pages
+    pagination[:page] = page
+    pagination[:next] =  page < total_pages ? page + 1 : nil
+    pagination[:previous] = page > 1 ? page - 1 : nil
+    pagination[:per_page] = rows
+    meta[:pagination] = pagination
+
+
     meta[:query] = {}
     meta[:query][:query] = result['responseHeader']['params']['q'] # Query string
     if result['responseHeader']['params']['q'].blank?
       meta[:query][:query] = result['responseHeader']['params']['q.alt'] # Query string
     end
-    meta[:query][:total] = result['response']['numFound'] # Total results
+    meta[:query][:total] = total
     meta[:query][:facet_fields] = [*result['responseHeader']['params']['facet.field']] # Always return an array of given facet fields
     meta[:query][:facet_queries] = [*result['responseHeader']['params']['fq']]
 
     meta[:facet_counts] = {}
     meta[:facet_counts][:facet_fields] = {}
-    
+
     result['facet_counts']['facet_fields'].each do |field, facets|
 
       unsortedArray = facets.each_slice(2).to_a.map{|x| {label: x[0], count: x[1]}} # unsorted array
@@ -78,8 +93,8 @@ class V1::MetsPackagesController < ApplicationController
 
     if package
       @response[:mets_package] = package.as_json
-      
-      if @unlocked 
+
+      if @unlocked
         @response[:mets_package][:unlocked] = @unlocked
         @response[:mets_package][:unlocked_until_date] = @unlocked_until_date
       end
@@ -105,7 +120,7 @@ class V1::MetsPackagesController < ApplicationController
     if params[:update_fields] && params[:update_fields][:copyright_status]
       interface.copyright_status = params[:update_fields][:copyright_status]
     end
-    
+
     # Check if xml is updated
     if xml == interface.xml
       @response[:mets_package] = package
@@ -156,12 +171,12 @@ class V1::MetsPackagesController < ApplicationController
     thumbnail_path = Pathname.new("#{APP_CONFIG['cache_path']}/#{package.name}/thumbnails/#{format}/#{thumbnail_file_name}.jpg")
     # If thumbnail doesn't exist, generate or use default
     if !thumbnail_path.exist? || !thumbnail_path.file?
-      package.generate_thumbnails(page: thumbnail_file_name, format: format) # Generate thumbnail file 
+      package.generate_thumbnails(page: thumbnail_file_name, format: format) # Generate thumbnail file
       if !thumbnail_path.exist? || !thumbnail_path.file?
         thumbnail_path = Pathname.new(APP_CONFIG['default_thumbnail'])
       end
     end
-    
+
     file = File.open(thumbnail_path.to_s)
     @response = {ok: "success"}
     send_data file.read, filename: package.name + "_thumbnail.jpg", disposition: "inline"

@@ -26,7 +26,7 @@ class SearchEngine
     solr.commit
   end
 
-  def self.query(query, facets: [])
+  def self.query(query, facets: [], page: 1, rows: 20)
     highlight_maxcount = 10
     facet_fields = [
       'title_facet',
@@ -51,7 +51,7 @@ class SearchEngine
       'chronological_3',
       'year'
     ]
-    
+
     facet_queries = []
     facets.each do |facet|
       next if facet['facet'] == "copyrighted"
@@ -59,7 +59,7 @@ class SearchEngine
     end
     facet_queries << "copyrighted:\"false\""
 
-    solr.get('select', params: {
+    solr.paginate(page, rows, 'select', params: {
       "defType" => "edismax",
       q: query,
       qf: query_fields.join(" "),
@@ -73,7 +73,6 @@ class SearchEngine
       fq: facet_queries,
       "hl.simple.pre" => "<span class='highlighted-text'>",
       "hl.simple.post" => "</span>",
-      rows: 20,
       "q.alt" => '*',
       sort: "score desc, name desc"
     }.compact)
