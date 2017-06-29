@@ -2,6 +2,7 @@
 class DcInterface
   def initialize(xml)
     @doc = Nokogiri::XML(xml)
+    @doc.remove_namespaces!
   end
 
   def set_ordinals_chronologicals(hash)
@@ -12,11 +13,11 @@ class DcInterface
   end
 
   def id
-    @doc.xpath("//simpledc/dc:identifier").text
+    @doc.xpath("//simpledc/identifier").text
   end
 
   def author
-    [@doc.xpath("//simpledc/dc:creator").text]
+    [@doc.xpath("//simpledc/creator").text]
   end
 
   def authors
@@ -24,11 +25,11 @@ class DcInterface
   end
 
   def language
-    @doc.xpath("//simpledc/dc:language").text
+    @doc.xpath("//simpledc/language").text
   end
 
   def type_of_record
-    @doc.xpath("//simpledc/dc:type").map(&:text)
+    @doc.xpath("//simpledc/type").map(&:text)
   end
 
   def publisher
@@ -36,7 +37,7 @@ class DcInterface
   end
 
   def title
-    @doc.xpath("//simpledc/dc:title").text
+    @doc.xpath("//simpledc/title").text
   end
 
   def sub_title
@@ -56,6 +57,6 @@ class DcInterface
   end
 
   def year
-    @doc.xpath("//simpledc/dc:date").text
+    @doc.xpath("//simpledc/date").text
   end
 end
