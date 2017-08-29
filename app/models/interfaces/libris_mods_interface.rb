@@ -59,11 +59,16 @@ class LibrisModsInterface
   def title
     myTitle=@doc.xpath("//mods/titleInfo[not(@type)]/title").text
     myNonSort=@doc.xpath("//mods/titleInfo[not(@type)]/nonSort").text
-    if myNonSort.blank?
-        return myTitle
-    else
-        return [myNonSort, myTitle].compact.join(' ')
-    end
+    subTitle=@doc.xpath("//mods/titleInfo[not(@type)]/subTitle").text
+    partNumber=@doc.xpath("//mods/titleInfo[not(@type)]/partNumber").text
+    partName=@doc.xpath("//mods/titleInfo[not(@type)]/partName").text
+
+    myNonSort = nil if myNonSort.blank?
+    subTitle = nil if subTitle.blank?
+    partNumber = nil if partNumber.blank?
+    partName = nil if partName.blank?
+
+    [myNonSort, myTitle, subTitle, partNumber, partName].compact.join(' ')
   end
 
   def language
