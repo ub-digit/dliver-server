@@ -51,7 +51,7 @@ class LibrisModsInterface
     author.map do |author_entry|
       given, family, date = author_entry
       tmp = "#{given} #{family}"
-      tmp += " (#{date})" if date
+      tmp += " (#{date})" if date.present?
       tmp
     end.join("; ")
   end
@@ -63,12 +63,36 @@ class LibrisModsInterface
     partNumber=@doc.xpath("//mods/titleInfo[not(@type)]/partNumber").text
     partName=@doc.xpath("//mods/titleInfo[not(@type)]/partName").text
 
+    ordinal_1_caption=@doc.xpath("//mods/part/detail[@type='ordinal_1']/caption").text
+    ordinal_1_number=@doc.xpath("//mods/part/detail[@type='ordinal_1']/number").text
+    ordinal_2_caption=@doc.xpath("//mods/part/detail[@type='ordinal_2']/caption").text
+    ordinal_2_number=@doc.xpath("//mods/part/detail[@type='ordinal_2']/number").text
+    ordinal_3_caption=@doc.xpath("//mods/part/detail[@type='ordinal_3']/caption").text
+    ordinal_3_number=@doc.xpath("//mods/part/detail[@type='ordinal_3']/number").text
+
     myNonSort = nil if myNonSort.blank?
     subTitle = nil if subTitle.blank?
     partNumber = nil if partNumber.blank?
     partName = nil if partName.blank?
 
-    [myNonSort, myTitle, subTitle, partNumber, partName].compact.join(' ')
+    ordinal_1_caption = nil if ordinal_1_caption.blank?
+    ordinal_1_number = nil if ordinal_1_number.blank?
+    ordinal_2_caption = nil if ordinal_2_caption.blank?
+    ordinal_2_number = nil if ordinal_2_number.blank?
+    ordinal_3_caption = nil if ordinal_3_caption.blank?
+    ordinal_3_number = nil if ordinal_3_number.blank?
+
+    [myNonSort,
+     myTitle,
+     subTitle,
+     partNumber,
+     partName,
+     ordinal_1_caption,
+     ordinal_1_number,
+     ordinal_2_caption,
+     ordinal_2_number,
+     ordinal_3_caption,
+     ordinal_3_number].compact.join(' ')
   end
 
   def language
