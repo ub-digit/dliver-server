@@ -257,7 +257,7 @@ class MetsPackage < ActiveRecord::Base
     if package_id
       files = MetsPackage.xml_file(package_id: package_id)
     else
-      files = "#{path}/*/*/*.xml"
+      files = "#{path}/GUB*/*/*.xml"
     end
     Dir.glob(files).map do |filename| 
       xmldata = File.read(filename)
