@@ -107,7 +107,7 @@ class MetsPackage < ActiveRecord::Base
 
     # If specific page is given, only create thumbnail for it
     if page
-      source_file = Pathname.new(APP_CONFIG['store_path'] + '/' + self.name + '/' + thumbnail_file_group + '/' + page + '.jpg') # Change jpg to dynamic value depending on group
+      source_file = Pathname.new(APP_CONFIG['store_path'] + '/' + MetsPackage.package_path(package_id: self.name) + '/' + thumbnail_file_group + '/' + page + '.jpg') # Change jpg to dynamic value depending on group
       destination_file = Pathname.new(destination_path + source_file.basename('.*').to_s + '.jpg')
       if !destination_file.exist?
         FileAdapter.create_thumbnail(source_file: source_file.to_s, destination_file: destination_file.to_s, format: format)
@@ -115,7 +115,7 @@ class MetsPackage < ActiveRecord::Base
     else
       # Generate thumbnails for all files in group
       source_file_group['files'].each do |file|
-        source_file = Pathname.new(APP_CONFIG['store_path'] + '/' + self.name + '/' + file['location'])
+        source_file = Pathname.new(APP_CONFIG['store_path'] + '/' + MetsPackage.package_path(package_id: self.name) + '/' + file['location'])
         destination_file = Pathname.new(destination_path + source_file.basename('.*').to_s + '.jpg')
         if !destination_file.exist?
           FileAdapter.create_thumbnail(source_file: source_file.to_s, destination_file: destination_file.to_s, format: format)
@@ -188,8 +188,13 @@ class MetsPackage < ActiveRecord::Base
 
   # Returns the path to source mets xml file for a given package id
   def self.xml_file(package_id:)
-    return "#{APP_CONFIG['store_path']}/#{package_id}/#{package_id}_mets.xml"
+    return "#{APP_CONFIG['store_path']}/#{MetsPackage.package_path(package_id: package_id)}/#{package_id}_mets.xml"
   end
+
+  def self.package_path(package_id:)
+    return package_id[0..-4] + "/" + package_id
+  end
+
 
   def as_json(opts={})
     return super(except: [:xml, :metadata]).merge({
@@ -252,7 +257,7 @@ class MetsPackage < ActiveRecord::Base
     if package_id
       files = MetsPackage.xml_file(package_id: package_id)
     else
-      files = "#{path}/*/*.xml"
+      files = "#{path}/GUB*/*/*.xml"
     end
     Dir.glob(files).map do |filename| 
       xmldata = File.read(filename)

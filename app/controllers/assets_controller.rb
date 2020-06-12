@@ -13,7 +13,7 @@ class AssetsController < ApplicationController
     package = MetsPackage.find_by_name(params[:package_name])
 
     file_data = package.find_file_by_file_id(params[:file_id]) if package
-    full_path = APP_CONFIG["store_path"] + "/" + package.name + "/" + file_data[:location] if file_data
+    full_path = APP_CONFIG["store_path"] + "/" + MetsPackage.package_path(package_id: package.name) + "/" + file_data[:location] if file_data
     if !file_data
       error_msg(ErrorCodes::OBJECT_ERROR, "Could not find file with id: #{params[:file_id]}")
       render_json
