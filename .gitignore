@@ -16,8 +16,8 @@
 !/log/.keep
 /tmp
 
-config/database.yml
-config/config_secret.yml
+#config/database.yml
+#config/config_secret.yml
 config/initializers/api_key.rb
 config/initializers/config.rb
 config/passwd
